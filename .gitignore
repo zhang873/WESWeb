@@ -2,4 +2,5 @@
 files/
 logs/
 tmp/
+services/log
 node_modules/
