@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <link href="css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="css/gbvision.css" rel="stylesheet"/>
+  <title>GBVISION</title>
+  <script src="/js/jquery-1.10.2.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+  <script src="/js/underscore.js"></script>
+  <script src="/js/backbone.js"></script>
+  <script src="/js/md5.js"></script>
+  <script src="/js/gbvision.js"></script>
+</head>
+<body style="height:100%; background-color: #428bca;">
+<div class="container fixed-width center-block" id="createUserModal" style="margin-top:80px;">
+  <div class="well center-block" id="loginPanel">
+    <p class="text-center" id="loginLogo">
+      GBVISION
+    </p>
+    <div class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="nameTxt" class="col-xs-3 control-label">用户名</label>
+        <div class="col-xs-6">
+          <input type="text" class="form-control" id="nameTxt" placeholder="请输入用户名"/>
+        </div>
+      </div>
+      <script>var __slice = Array.prototype.slice;var __hasProp = Object.prototype.hasOwnProperty;var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };var __extends = function(child, parent) {  for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }  function ctor() { this.constructor = child; }  ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype;  return child; };var __indexOf = Array.prototype.indexOf || function(item) {  for (var i = 0, l = this.length; i < l; i++) {    if (this[i] === item) return i;  } return -1; };(function () {
+        return $('#nameTxt').focus();
+      }).call(this);</script>
+      <div class="form-group">
+        <label for="passwordTxt" class="col-xs-3 control-label">密码</label>
+        <div class="col-xs-6">
+          <input type="password" class="form-control " id="passwordTxt" placeholder="请输入密码"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-xs-6 col-xs-offset-3">
+          <button class="btn btn-lg btn-primary col-xs-12 " id="loginBtn" onclick="login()" type="button">登录</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="navbar navbar-default input-group-addon-format navbar-fixed-bottom " role="navigation">
+  <div class="container fixed-width">
+    <a class="center-block text-center" id="loginNav" href="#">© 上海金桥信息股份有限公司 2014</a>
+  </div>
+</div>
+</body>
+<script>var __slice = Array.prototype.slice;var __hasProp = Object.prototype.hasOwnProperty;var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };var __extends = function(child, parent) {  for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }  function ctor() { this.constructor = child; }  ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype;  return child; };var __indexOf = Array.prototype.indexOf || function(item) {  for (var i = 0, l = this.length; i < l; i++) {    if (this[i] === item) return i;  } return -1; };(function () {
+  this.login = function() {
+    var name, pwd;
+    name = $('#nameTxt').val().trim();
+    pwd = $('#passwordTxt').val().trim();
+    if (name === '') {
+      return popBy('#nameTxt', false, '用户名不能为空');
+    }
+    if (name.length > 20 || name.length < 4) {
+      return popBy('#nameTxt', false, '用户名长度只能为4－20位');
+    }
+    if (pwd === '') {
+      return popBy('#passwordTxt', false, '密码不能为空');
+    }
+    if (pwd.length > 20 || pwd.length < 4) {
+      return popBy('#passwordTxt', false, '密码长度只能为4－20位');
+    }
+    return $.ajax({
+      type: "POST",
+      url: "/login",
+      data: JSON.stringify({
+        username: name,
+        password: hex_md5(pwd)
+      }),
+      contentType: "application/json; charset=utf-8"
+    }).done(function(json) {
+      if (json && json.rtn === 0) {
+        return window.location.href = '/index';
+      } else {
+        return popBy('#loginBtn', false, json.result);
+      }
+    }).fail(function(a, b, c) {
+      return console.log('error', a, b, c);
+    });
+  };
+  return window.document.onkeydown = function(e) {
+    e = e || window.event;
+    if (e.keyCode === 13) {
+      return login();
+    }
+  };
+}).call(this);</script>
+</html>

@@ -1,0 +1,87 @@
+{% extends 'layout.html' %}
+
+
+{% block style %}
+
+
+{% endblock style%}
+
+{% block script %}
+{% endblock script %}
+
+{% block main %}
+
+{% raw %}
+{% endraw %}
+
+
+<div id="log">
+  <div class="well well-sm fix-top-2 ">
+    <div class="container fixed-width">
+      <button type="button" class="btn btn-default" id="deleteLogs"><span class="glyphicon glyphicon-folder-close"></span> 删除</button>
+      <div class="col-xs-3 input-group pull-right searchPanel">
+        <input type="text" class="form-control" id="searchInput" placeholder="请输入日志文件名"/><span class="input-group-btn"><button type="submit" class="btn btn-default" id="searchBtn">搜索</button></span>
+      </div>
+    </div>
+  </div>
+  <div class="container fix-top-2-tablelist-default fixed-width">
+    <h3 class="pageInfo"><img src="images/header.png" class="circlePic"/>&nbsp日志</h3>
+    <div class="panel panel-default">
+      <table class="table table-striped" style="table-layout:fixed;word-wrap:break-word;" id="log-list">
+        <thead class="thead-color">
+        <tr>
+          <th class="col-xs-6 curpointer sortByName sortBy">
+            <span class="col-xs-1 "><input type="checkbox" id="allLogs"/></span>
+            <div class="col-xs-10 ">
+              <span class=" col-xs-7">名称<b class="caret " sortcolname="name" style="display:none"></b></span>
+            </div>
+          </th>
+          <th class="col-xs-2 curpointer sortBySize sortBy">
+            大小<b class="caret" sortcolname="size" style="display:none"></b>
+          </th>
+          <th class="col-xs-4 curpointer sortByMtime sortBy">
+            修改时间<b class="caret" sortcolname="mtime" style="display:none"></b>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% raw %}
+
+<script type="text/template" id="log-template" style="display: none">
+
+  <td>
+    <span class="col-xs-1 "><input type="checkbox" value="{{name}}" class="log"/></span>
+    <div class="col-xs-10">
+      <span class="col-xs-9 name" title="{{name}}">{{name}}</span>
+    </div>
+    <div class="col-xs-4 operation" style="display:none;text-align: right;">
+      <a href="/logfile/{{name}}" class="download gap" title="下载"><span>下载</span></a><a href="javascript:void(0)" class="clear gap" title="删除"><span>删除</span></a>
+    </div>
+  </td>
+  <td>
+    {{size}}
+  </td>
+  <td>
+    {{mtime}}
+  </td>
+
+
+
+</script>
+
+{% endraw %}
+
+{% endblock main%}
+
+{% block lazyscript %}
+
+<script src="/js/log/model/log.js"></script>
+<script src="/js/log/view/log.js"></script>
+
+{% endblock lazyscript %}

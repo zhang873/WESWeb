@@ -1,0 +1,28 @@
+var mongoose = require('mongoose')
+var path = require('path')
+
+var models = module.exports = {}
+
+//models.box = require(path.join(__dirname, './box.server.model'))
+//models.boxunionuser = require(path.join(__dirname, './boxunionuser.server.model'))
+//models.group = require(path.join(__dirname, './group.server.model'))
+//models.logger = require(path.join(__dirname, './logger.server.model'))
+//models.media = require(path.join(__dirname, './media.server.model'))
+//models.package = require(path.join(__dirname, './package.server.model'))
+//models.contract = require(path.join(__dirname, './contract.server.model'))
+//models.stocks = require(path.join(__dirname, './stocks.server.model'))
+//models.task = require(path.join(__dirname, './task.server.model'))
+models.user = require(path.join(__dirname, './user.server.model'))
+//models.mediaunionuser = require(path.join(__dirname, './mediaunionuser.server.model'))
+//models.playlistunionuser = require(path.join(__dirname, './playlistunionuser.server.model'))
+//models.scheduleunionuser = require(path.join(__dirname, './scheduleunionuser.server.model'))
+//models.taskunionuser = require(path.join(__dirname, './taskunionuser.server.model'))
+//models.taskunionuser = require(path.join(__dirname, './setting.server.model'))
+models.custom = require(path.join(__dirname, './custom.server.model'))
+models.inventory = require(path.join(__dirname, './inventory.server.model'))
+models.logistics = require(path.join(__dirname, './logistics.server.model'))
+models.product = require(path.join(__dirname, './product.server.model'))
+models.sales = require(path.join(__dirname, './sales.server.model'))
+models.warehouse = require(path.join(__dirname, './warehouse.server.model'))
+models.department = require(path.join(__dirname, './department.server.model'))
+

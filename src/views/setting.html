@@ -1,0 +1,196 @@
+{% extends 'layout.html' %}
+
+
+{% block style %}
+<link href="css/jquery.fileupload.css" rel="stylesheet" />
+
+{% endblock style%}
+
+{% block script %}
+{% endblock script %}
+
+{% block main %}
+
+<div class="well well-sm fix-top-2">
+  <div class="container fixed-width">
+    <span class="spanInput" style="margin-left: 13px;" >媒体总量：</span>
+    <input type="text" class="setInput" id="mediaCap" onchange="setMediaCap()" value="">
+    <strong style="margin-right: 35px">GB</strong>
+
+    <span class="spanInput" >媒体阈值：</span>
+    <input type="text" class="setInput" id="mediaThreshold" onchange="setMediaThreshold()" value="">
+    <strong>GB</strong>
+    <!--<div class="quick-release" style="float:left;width:330px;height:34px;padding:0 15px">
+       &lt;!&ndash;<span style="font-size:14px;color:#666;line-height: 34px;" >快速发布制式：</span>
+       <select onchange="updatepublish()" id="updateScene" style="outline-style:none;height:34px;line-height: 34px;width:36%;padding-left:10px;border:1px solid #ccc;border-radius: 4px;
+-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+-webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;">
+         <option value="720P" select="select">720P</option>
+         <option value="1080P">1080P</option>
+       </select>&ndash;&gt;
+
+
+
+    </div>-->
+    <!--<span class="btn">&nbsp</span>-->
+  </div>
+</div>
+<div class="container fix-top-2-tablelist-default fixed-width">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Android播放器升级</h3>
+    </div>
+    <div class="panel-body">
+      <div>
+        <label class="control-label">播放软件升级</label>
+        <div class="panel-body">
+          <label class="control-label pull-left">当前版本号: &nbsp&nbsp</label><label class="control-label pull-left" id="ANDVersion">{{version.android.code || 'Unknown'}}/{{version.ds120.code || 'Unknown'}}</label>
+        </div>
+        <div class="progress progress-striped active" id="ANDProgress" style="display:none">
+          <div class="progress-bar progress-bar-primary" style="width: 0%;">
+          </div>
+          <p id="ANDProgresspercent" style="width:100%; text-align:center;position:absolute;top:0;left:0;">
+            0%
+          </p>
+        </div>
+        <div class="panel-body">
+          <form id="ANDForm">
+            <span class="btn btn-primary fileinput-button"><i class="glyphicon glyphicon-upload"></i><span> 升级</span><input id="ANDUploadInput" type="file" name="file" style="width: 90px; height: 30px"/></span>
+          </form>
+        </div>
+      </div>
+      <hr/>
+      <div>
+        <label class="control-label">控制软件升级</label>
+        <div class="panel-body">
+          <label class="control-label pull-left">当前版本号: &nbsp&nbsp</label><label class="control-label pull-left" id="D4AVersion">{{version.deamon4android.code || 'Unknown'}}</label>
+        </div>
+        <div class="progress progress-striped active" id="D4AProgress" style="display:none">
+          <div class="progress-bar progress-bar-primary" style="width: 0%;">
+          </div>
+          <p id="D4AProgresspercent" style="width:100%; text-align:center;position:absolute;top:0;left:0;">
+            0%
+          </p>
+        </div>
+        <div class="panel-body">
+          <form id="D4AForm">
+            <span class="btn btn-primary fileinput-button"><i class="glyphicon glyphicon-upload"></i><span> 升级</span><input id="D4AUploadInput" type="file" name="file" style="width: 90px; height: 30px"/></span>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Windows播放器升级</h3>
+    </div>
+    <div class="panel-body">
+      <div>
+        <label class="control-label">播放软件升级</label>
+        <div class="panel-body">
+          <label class="control-label pull-left">当前版本号: &nbsp&nbsp</label><label class="control-label pull-left" id="WINVersion">{{version.windows.code || 'Unknown'}}</label>
+        </div>
+        <div class="progress progress-striped active" id="WINProgress" style="display:none">
+          <div class="progress-bar progress-bar-primary" style="width: 0%;">
+          </div>
+          <p id="WINProgresspercent" style="width:100%; text-align:center;position:absolute;top:0;left:0;">
+            0%
+          </p>
+        </div>
+        <div class="panel-body">
+          <form id="WINForm">
+            <span class="btn btn-primary fileinput-button"><i class="glyphicon glyphicon-upload"></i><span> 升级</span><input id="WINUploadInput" type="file" name="file" style="width: 90px; height: 30px"/></span>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--确认模态框-->
+<div class="modal fade bs-example-modal-sm" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">提示！</h4>
+      </div>
+      <div class="modal-body">
+        <p>确定要升级吗?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+        <button type="button" class="btn btn-primary" onclick="modelHide()">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--升级完成模态框-->
+<div class="modal fade bs-example-modal-sm" id="finishModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="finishModalLabel">提示！</h4>
+      </div>
+      <div class="modal-body">
+        <p>升级完成！</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+{% raw %}
+{% endraw %}
+
+{% endblock main%}
+
+{% block lazyscript %}
+
+<script src="/js/vendor/jquery.ui.widget.js"></script>
+<script src="/js/jquery.fileupload.js"></script>
+<script src="/js/setting.js"></script>
+<script>
+  var __slice = Array.prototype.slice;
+  var __hasProp = Object.prototype.hasOwnProperty;
+  var __bind = function(fn, me) {
+    return function() {
+      return fn.apply(me, arguments);
+    };
+  };
+  var __extends = function(child, parent) {
+    for (var key in parent) {
+      if (__hasProp.call(parent, key)) child[key] = parent[key];
+    }
+    function ctor() {
+      this.constructor = child;
+    }
+    ctor.prototype = parent.prototype;
+    child.prototype = new ctor;
+    child.__super__ = parent.prototype;
+    return child;
+  };
+  var __indexOf = Array.prototype.indexOf ||
+          function(item) {
+            for (var i = 0, l = this.length; i < l; i++) {
+              if (this[i] === item) return i;
+            }
+            return -1;
+          };
+  (function() {
+    return $(function() {
+      return fileUpload();
+    });
+  }).call(this);
+
+</script>
+
+{% endblock lazyscript %}

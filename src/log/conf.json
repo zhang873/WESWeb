@@ -1,0 +1,30 @@
+{
+  "customDefaultAtt": {
+    "type": "dateFile",
+    "absolute": true,
+    "alwaysIncludePattern": true
+  },
+  "appenders": [
+    {"type": "console"},
+    {
+      "type": "dateFile",
+      "filename":"logs/UserAction",
+      "pattern": "_yyyy-MM-dd.txt",
+      "alwaysIncludePattern": true,
+      "category": "logInfo",
+      "backups":10,
+      "maxLogSize": 10485760
+    },
+    {
+      "type": "dateFile",
+      "filename": "logs/ServiceAction",
+      "pattern": "_yyyy-MM-dd.txt",
+      "category": "logAction",
+      "alwaysIncludePattern": true,
+      "backups":10,
+      "maxLogSize": 10485760
+    }
+  ],
+  "replaceConsole": true,
+  "levels": {"logInfo": "debug", "logAction": "debug"}
+}

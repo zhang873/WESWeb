@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="">
+<head>
+  <meta charset="UTF-8">
+  <title>{{title}}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/gbvision.css">
+
+  {% block style %}{% endblock style %}
+
+  <script src="/js/jquery-1.10.2.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+  <script src="/js/moment.js"></script>
+  <script src="/js/zh-cn.js"></script>
+  <script src="/js/underscore.js"></script>
+  <script src="/js/backbone.js"></script>
+  <script src="/js/md5.js"></script>
+  <script src="/js/scrollhelp.js"></script>
+  <script src="/js/gbvision.js"></script>
+  <script src="/js/jquery.cookies.js"></script>
+  <script src="/js/user/model/user.js"></script>
+  <script src="/js/filesize.min.js"></script>
+
+  {% block script %}{% endblock script %}
+
+</head>
+<body>
+
+  <div class="modal fade" id="modifyPersonalModal" tabindex="-1" role="dialog" aria-labelledby="modifyPersonalModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="modifyPersonalModalLabel">修改个人信息</h4>
+        </div>
+        <div class="modal-body col-sm-offset-1">
+          <form class="form-horizontal" id="password" style="margin-top: 10px">
+            <div class="form-group">
+              <label for="originalPasswordTxt" class="col-sm-3 control-label">原密码</label>
+              <div class="col-sm-6">
+                <input type="password" class="form-control " id="originalPasswordTxt" placeholder="请输入原密码"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="newPasswordTxt" class="col-sm-3 control-label">新密码</label>
+              <div class="col-sm-6">
+                <input type="password" class="form-control " id="newPasswordTxt" placeholder="请输入新密码"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="comfirmPasswordTxt" class="col-sm-3 control-label">确认新密码</label>
+              <div class="col-sm-6">
+                <input type="password" class="form-control " id="comfirmPasswordTxt" placeholder="请再次输入新密码"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-6 col-sm-offset-3">
+                <button type="button" id="modifyPasswordBtn" class="btn btn-primary col-sm-offset-8 formConFix" onclick="modifyPassword()">保存修改</button>
+              </div>
+            </div>
+          </form>
+          <form class="form-horizontal" id="description" style="margin-top: 10px">
+            <div class="form-group">
+              <label for="descriptionTxt" class="col-sm-3 control-label">个人注释</label>
+              <div class="col-sm-6">
+                <textarea rows="3" class="form-control " id="descriptionTxt" placeholder="请输入个人注释"></textarea>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-6 col-sm-offset-3">
+                <button type="button" id="modifyDescriptionBtn" class="btn btn-primary col-sm-offset-8" onclick="modifyDescription()">保存修改</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="navbar navbar-inverse navbar-fixed-top " role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">GBVISION</a>
+      </div>
+      <div class="collapse navbar-collapse" style="min-width:794px;">
+        <ul class="nav navbar-nav" id="headNav">
+          <li class=""><a href="/index">首页</a></li>
+          <!--<li class=""><a href="/ML">媒体库</a></li>-->
+          <li class=""><a href="/contract">播放列表</a></li>
+          <li class=""><a href="/custom">排期</a></li>
+          <li class=""><a href="/department">播放器</a></li>
+          <!--<li class=""><a href="/task">任务</a></li>-->
+          <!--<li class=""><a href="/setting" class="adminauthorsetting">设置</a></li>-->
+          <li class=""><a href="/user" class="adminauthoruser">用户</a></li>
+          <!--<li class=""><a href="/log" class="adminauthorlog">日志</a></li>-->
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
+              <b id="usertype" style="display:none">kk</b>
+              <b id="username">tt</b>
+              <script>
+
+                var __slice = Array.prototype.slice;
+                var __hasProp = Object.prototype.hasOwnProperty;
+                var __bind = function(fn, me) {
+                  return function() {
+                    return fn.apply(me, arguments);
+                  };
+                };
+                var __extends = function(child, parent) {
+                  for (var key in parent) {
+                    if (__hasProp.call(parent, key)) child[key] = parent[key];
+                  }
+                  function ctor() {
+                    this.constructor = child;
+                  }
+                  ctor.prototype = parent.prototype;
+                  child.prototype = new ctor;
+                  child.__super__ = parent.prototype;
+                  return child;
+                };
+                var __indexOf = Array.prototype.indexOf ||
+                        function(item) {
+                          for (var i = 0, l = this.length; i < l; i++) {
+                            if (this[i] === item) return i;
+                          }
+                          return -1;
+                        };
+                (function() {
+                  $('#username').html($.cookie('name') || '');
+                  return $('#usertype').html($.cookie('type') || '');
+                }).call(this);
+
+              </script>
+            <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="javascript:void(0)" onclick="modalIputFocus('#modifyPersonalModal', '#newMailTxt')">修改个人信息</a></li>
+              <li class="divider"></li>
+              <li><a href="/logout">退出</a></li>
+            </ul>
+          </li>
+        </ul>
+        <script>
+
+          var __slice = Array.prototype.slice;
+          var __hasProp = Object.prototype.hasOwnProperty;
+          var __bind = function(fn, me) {
+            return function() {
+              return fn.apply(me, arguments);
+            };
+          };
+          var __extends = function(child, parent) {
+            for (var key in parent) {
+              if (__hasProp.call(parent, key)) child[key] = parent[key];
+            }
+            function ctor() {
+              this.constructor = child;
+            }
+            ctor.prototype = parent.prototype;
+            child.prototype = new ctor;
+            child.__super__ = parent.prototype;
+            return child;
+          };
+          var __indexOf = Array.prototype.indexOf ||
+                  function(item) {
+                    for (var i = 0, l = this.length; i < l; i++) {
+                      if (this[i] === item) return i;
+                    }
+                    return -1;
+                  };
+          (function() {
+            var actived, loc, type;
+            loc = window.location.href.split('/');
+            actived = "/" + loc.pop();
+//            type = $.cookie('type');
+//            if (!type || type === 'normal') {
+//              var authority = $.cookie('authority').split(',');
+//              console.log(authority);
+//              if(authority == ''){
+//                $('.adminauthoruser').hide();
+//                $('.adminauthorsetting').hide();
+//                $('.adminauthorlog').hide();
+//              }
+//              for(var i = 0;i<authority.length;i++){
+//                if(authority[i] == 'logPermission' && authority.length == 1){
+//                  console.log(authority[i]);
+//                  $('.adminauthoruser').hide();
+//                  $('.adminauthorsetting').hide();
+//                }
+//                if(authority[i] == 'userPermission' && authority.length == 1){
+//                  console.log(authority[i]);
+//                  $('.adminauthorlog').hide();
+//                  $('.adminauthorsetting').hide();
+//                }
+//                if(authority[i] == 'setPermission' && authority.length == 1){
+//                  console.log(authority[i]);
+//
+//                  $('.adminauthorlog').hide();
+//                  $('.adminauthoruser').hide();
+//                }
+//                if(authority[i] == 'logPermission' && authority.length == 2){
+//                  if(authority[i+1] = 'userPermission'){
+//                    $('.adminauthorsetting').hide();
+//                  }
+//                  if(authority[i+1] = 'setPermission'){
+//                    $('.adminauthoruser').hide();
+//                    $('.adminauthorsetting').show();
+//                  }
+//                }
+//                if(authority[i] == 'userPermission' && authority.length == 2){
+//                  $('.adminauthorlog').hide();
+//                }
+//              }
+//            }
+            return $.each($('.nav li a'), function(i, o) {
+              if (actived === $(o).attr('href')) {
+                return $(o).parent().addClass('active').siblings('li').removeClass('active');
+              }
+            });
+          }).call(this);
+
+        </script>
+      </div>
+    </div>
+  </div>
+
+  {% block main %}{% endblock main %}
+  {% block lazyscript %}{% endblock lazyscript %}
+</body>
+</html>
