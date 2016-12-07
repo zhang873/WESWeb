@@ -2,57 +2,6 @@ _.templateSettings = {
     interpolate : /\{\{(.+?)\}\}/g
 };
 
-
-//var users = new Users;
-
-
-//PlaylistUnionUser = Backbone.Model.extend({
-//    initialize: function() {
-//    },
-//    defaults: {
-//        playlistId: '',
-//        departId:''
-//    }
-//});
-//PlaylistUnionUsers = Backbone.Collection.extend({
-//    url:'/playlistunionuser',
-//    model: PlaylistUnionUser
-//});
-//var playlistunionusers = new PlaylistUnionUsers;
-//playlistunionusers.fetch();
-//users.fetch();
-
-//function getUsername(playlistid){
-//    var puuModels=playlistunionusers.models;
-//    var userModels = users.models;
-//    var departid='';
-//    var $username='';
-//    for(var i = 0; i<puuModels.length;i++){
-//        if(playlistid==puuModels[i].attributes.playlistId){
-//            departid = puuModels[i].attributes.departId;
-//            break;
-//        }
-//    }
-//    for(var j=0;j<userModels.length;j++){
-//        if(departid==userModels[j].attributes.departId){
-//            $username=userModels[j].attributes.name;
-//            return $username;
-//        }
-//    }
-//    return $username;
-//}
-//
-//function getSize(data){
-//    if(data){
-//        var datasize = parseInt(data);
-//        var sizenum = filesize(datasize, {base: 2}).toUpperCase();
-//        return sizenum;
-//    }else{
-//        return "0B";
-//    }
-//
-//}
-
 /*view start*/
 var PlaylistItemView = Backbone.View.extend({
     tagName:'tr',
@@ -62,7 +11,7 @@ var PlaylistItemView = Backbone.View.extend({
         'mouseout': 'hideOper',
 
         'click .tdRemoveItem ':'clear',
-
+        'click .tdEditItem ':'edit',
         'click .tdCopyItem ':'copy',
         'click .chkMediaItem': 'selectMediaItem'
 
@@ -73,40 +22,41 @@ var PlaylistItemView = Backbone.View.extend({
     },
     render: function() {
         var data = this.model.toJSON();
-        //var data = this.model.attributes.sales;
         console.log(this.model)
         data.id = data._id;
         data.name = data.name;
-        //data.stamp = new moment(parseInt(data.stamp)).lang('zh-cn').from();
-        //data.userName = getUsername(data.id);
-        //if(!data.userName) data.userName='admin';
-        //data.size = getSize(data.size);
         $(this.el).html( _.template($('#tmplDepartment').html(), data));
 
         return this.el;
     },
+    edit: function() {
+        var tmpDepartment = this.model.toJSON();
+        $('#departmentCreate').find('h4').html('修改');
+
+        $('#departmentCreate').prop('tmpDepartmentId', tmpDepartment._id);
+        $('#nameInputCreate').val(tmpDepartment.name);
+        $('#descInputCreate').val(tmpDepartment.description);
+
+        console.log($('#departmentCreate').prop('tmpDepartmentId'));
+        $('#departmentCreate').modal('show');
+    },
     clear: function() {
         if(confirm("确认删除吗？")) {
+            var data = this.model.toJSON();
             this.model.destroy();
+            console.log(data);
+            var $ids = [];
+            $ids.push(data._id);
+            $.ajax({
+                type:'DELETE',
+                url: '/wes/department',
+                contentType: 'application/json',
+                data: JSON.stringify($ids),
+            }).done(function(res){
+                console.log(res);
+            });
         }
     },
-    //copy: function() {
-    //    var id = this.model.get('id');
-    //    $.post('/contract/copy/' + id, {stamp:Date.now()})
-    //        .done(function(data) {
-    //            var duplicate = new Playlist(data);
-    //            playlists.add(duplicate);
-    //            var itemView = new PlaylistItemView({model:duplicate});
-    //            $('#mediaArea tbody').prepend(itemView.render());
-    //        })
-    //        .fail(function(jqXHR) {
-    //            if(jqXHR.status === 404) {
-    //                alert('提交有误，找不到对应的排期');
-    //            } else {
-    //                alert('未知错误，请联系管理员');
-    //            }
-    //        });
-    //},
     selectMediaItem : function() {
         if($('.chkMediaItem:checked').length == $('.chkMediaItem').length) $('#chkAllItem').prop('checked', true);
         else $('#chkAllItem').prop('checked', false);
@@ -124,14 +74,21 @@ var PlaylistItemView = Backbone.View.extend({
 });
 
 var DepartmentView = Backbone.View.extend({
-    el:'#mediaArea',
+    el:'#department',
     events:{
+        'click #createBtn': function() {
+            $('#departmentCreate').prop('tmpDepartmentId', null);
+            $('#departmentCreate').find('h4').html('新建');
+            $('#nameInputCreate').val('');
+            $('#descInputCreate').val('');
+            $('#departmentCreate').modal('show');
+        },
+        'click #createDepartment': 'createDepartment',
         'click .sortByName': 'sortByName',
         'click .sortByStamp': 'sortByStamp',
         'click #chkAllItem': 'selectAllItem'
     },
     initialize: function() {
-        //console.log(playlists);
         var that = this;
         departments.fetch()
             .done(function(collection) {
@@ -149,7 +106,7 @@ var DepartmentView = Backbone.View.extend({
     },
 
     render: function(tmpDepartments) {
-        $(this.el).children('tbody').empty();
+        $('#mediaArea').children('tbody').empty();
         var $sortFlag = $('#mediaArea').find('.caret:visible').parents('.sortBy').hasClass('dropup');
         if(!$sortFlag) {
             this.renderDesc(tmpDepartments);
@@ -216,59 +173,108 @@ var DepartmentView = Backbone.View.extend({
 
         $('#chkAllItem').prop('checked', false);
         this.render(tmpDepartments);
-    }
+    },
+    createDepartment: function() {
+        var tmpdepartmentId = $('#departmentCreate').prop('tmpDepartmentId');
+        var departmentName = $('#nameInputCreate').val(),
+            departmentDesc = $('#descInputCreate').val();
+        var thisModel ;
+        console.log("########################");
+        console.log(tmpdepartmentId);
+        if(!tmpdepartmentId) {
+            thisModel = new Department({
+                name:departmentName,
+                description:departmentDesc});
+
+            thisModel.save().done(function (json) {
+                if (json.rtn === 0) {
+                    location.reload();
+                    $('#departmentCreate').modal('hide');
+                    $('#nameInputCreate').val('');
+                    $('#descInputCreate').val('');
+                }
+            });
+        } else {
+            var data = {};
+            data._id = tmpdepartmentId;
+            data.name = departmentName;
+            data.description = departmentDesc;
+            $.ajax({
+                type: "PUT",
+                url: "/wes/department",
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (json) {
+                    console.log(json);
+                    if(json.rtn === 0) {
+                        location.reload();
+                        $('#departmentCreate').modal('hide');
+                        $('#nameInputCreate').val('');
+                        $('#descInputCreate').val('');
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        }
+    },
+
 });
 
 /*view end*/
 var departmentView = new DepartmentView;
 
-function delPlaylists() {
+function delDepartment() {
     var $ids = [];
     $.each($('.chkMediaItem:checked'), function(i, o) {
         $ids.push($(o).val());
     });
 
     if($ids.length == 0) return popBy("#deleteBtn", false, '请先选择您要删除的播放列表');
-    if(confirm("确认删除吗？")) {
+    if(confirm("确认删除吗？??")) {
         $.ajax({
             type: "DELETE",
-            url: "/playlists",
+            url: "/wes/department",
             data: JSON.stringify($ids),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (json) {
-                if(json.status === 'success') {
+                console.log(json);
+                if(json.rtn === 0) {
                     $.each($ids,function(i,o) {
-                        var $temp = playlists.get(o);
-                        playlists.remove($temp);
+                        var $temp = departments.get(o);
+                        departments.remove($temp);
                     })
                     $(".chkMediaItem:checked").parents('tr').remove();
                 }
             },
             error: function (err) {
-                alert(err.responseText)
+                console.log(err);
+                //alert("错误:" + err)
             }
         });
     }
     //location.reload();
 }
-function searchPlaylists() {
+function searchDepartments() {
     var query = $('#searchInput').val().trim();
     var sortColNname = $('#mediaArea').find('.caret:visible').attr('sortColName') ?
         $('#mediaArea').find('.caret:visible').attr('sortColName') : 'stamp';
-    var tmpDepartments = playlists.sortBy(function (schedule) {
+    var tmpDepartments = departments.sortBy(function (schedule) {
         return schedule.get(sortColNname);
     });
     if(query !== '') {
-        tmpDepartments = tmpDepartments.filter(function(playlist) {
-            return playlist.toJSON().name.indexOf(query) > -1 ;
+        tmpDepartments = tmpDepartments.filter(function(department) {
+            return department.toJSON().name.indexOf(query) > -1 ;
         });
-        playlistView.render(tmpDepartments);
+        departmentView.render(tmpDepartments);
     } else {
         tmpDepartments = tmpDepartments.filter(function() {
             return true;
         });
-        playlistView.render(tmpDepartments);
+        departmentView.render(tmpDepartments);
     }
 
     $('#chkAllItem').prop('checked', false);

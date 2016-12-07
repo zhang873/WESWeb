@@ -1,6 +1,6 @@
 /*model start*/
 var Department = Backbone.Model.extend({
-    urlRoot:'/department',
+    urlRoot:'/wes/department',
     default:{
         id:'',
         name:''

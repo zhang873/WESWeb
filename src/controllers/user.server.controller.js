@@ -38,14 +38,14 @@ exports.userByID = function(req, res, next, uid) {
   });
 };
 
-exports.getUserBoxes = function(req, res) {
-  return BoxUnionUser.find({
-    userId: req.user.id,
-    look:1
-  }).exec(function(err, boxUnionUsers) {
-    return res.json(boxUnionUsers || []);
-  });
-};
+//exports.getUserBoxes = function(req, res) {
+//  return BoxUnionUser.find({
+//    userId: req.user.id,
+//    look:1
+//  }).exec(function(err, boxUnionUsers) {
+//    return res.json(boxUnionUsers || []);
+//  });
+//};
 
 
 exports.requiresLogin = function(req, res, next) {
@@ -56,6 +56,7 @@ exports.requiresLogin = function(req, res, next) {
   }
   token = req.cookies.token;
   return User.findOne({
+    is_delete:0,
     token: token
   }).exec(function(err, user) {
     if (err) {
@@ -72,21 +73,22 @@ exports.requiresLogin = function(req, res, next) {
 };
 
 exports.index = function(req, res) {
-  var authority;
-  authority = {};
-  _.each(req.currentUser.authority, function(auth) {
-    return authority[auth] = true;
-  });
+  //var authority;
+  //authority = {};
+  //_.each(req.currentUser.authority, function(auth) {
+  //  return authority[auth] = true;
+  //});
   res.render('user', {
     user: req.user || null,
     request: req,
     title: '用户',
-    authority: authority
+    //authority: authority
   })
-}
+};
 
 exports.adminReset = function(req, res) {
   User.findOneAndUpdate({username: 'admin'}, {
+    is_delete:0,
     password: md5('admin'),
     name:'管理员'
   }, function(err, admin) {
@@ -102,6 +104,7 @@ exports.adminReset = function(req, res) {
 
 exports.newUser = function(req, res) {
   return User.findOne({
+    is_delete:0,
     username: req.body.username
   }).exec(function(err, user) {
     if (err) {
@@ -122,8 +125,8 @@ exports.newUser = function(req, res) {
         });
       }
      logger.info('用户: ' + req.cookies.username + ' 添加用户 ' + req.body.username + ' 成功')
-      user.id = user._id.toString();
-      user.departId = user._id.toString();
+      //user.id = user._id.toString();
+      //user.departId = user._id.toString();
       user.token = user._id.toString();
       return user.save(function(err) {
         if (err) {
@@ -137,102 +140,135 @@ exports.newUser = function(req, res) {
   });
 };
 
-exports.deleteuser = function(req, res) {
-  var user;
-  user = req.user;
-  return user.remove(function(err) {
-    if (err) {
-      return res.send({
-        status: "fail"
-      });
-    }
-    BoxUnionUser.remove({userId:user.id},function(err){
-      if(err){
-        console.log(err);
-      }
-    })
-    MediaUnionUser.remove({departId:user.departId},function(err){
-      if(err){
-        console.log(err);
-      }
-    })
-    PlaylistUnionUser.remove({departId:user.departId},function(err){
-      if(err){
-        console.log(err);
-      }
-    })
-   ScheduleUnionUser.remove({departId:user.departId},function(err){
-      if(err){
-        console.log(err);
-      }
-    })
-    TaskUnionUser.remove({departId:user.departId},function(err){
-      if(err){
-        console.log(err);
-      }
-    })
-    logger.info('用户: ' + req.cookies.username + ' 删除用户 ' + req.user.username + ' 成功')
-
-    return res.json({
-      status: "success"
-    });
-  });
-};
+//exports.deleteuser = function(req, res) {
+//  var user;
+//  user = req.user;
+//  return user.remove(function(err) {
+//    if (err) {
+//      return res.send({
+//        rtn: -1,
+//        message:"fail"
+//      });
+//    }
+//   // BoxUnionUser.remove({userId:user.id},function(err){
+//   //   if(err){
+//   //     console.log(err);
+//   //   }
+//   // })
+//   // MediaUnionUser.remove({departId:user.departId},function(err){
+//   //   if(err){
+//   //     console.log(err);
+//   //   }
+//   // })
+//   // PlaylistUnionUser.remove({departId:user.departId},function(err){
+//   //   if(err){
+//   //     console.log(err);
+//   //   }
+//   // })
+//   //ScheduleUnionUser.remove({departId:user.departId},function(err){
+//   //   if(err){
+//   //     console.log(err);
+//   //   }
+//   // })
+//   // TaskUnionUser.remove({departId:user.departId},function(err){
+//   //   if(err){
+//   //     console.log(err);
+//   //   }
+//   // })
+//    logger.info('用户: ' + req.cookies.username + ' 删除用户 ' + req.user.username + ' 成功')
+//
+//    return res.json({
+//      rtn: 0,
+//      message:"success"
+//    });
+//  });
+//};
 
 exports.deleteusers = function(req, res) {
+  async.each(req.body, function (Id, callback) {
+    User.update({_id: Id}, {$set: {is_delete: 1}}, function (err) {
+      if (err) {
+        console.log(err);
+        return callback(err)
+      }
+    })
+    callback(null)
+  }, function (err) {
+    if (err) {
+      logger.info('用户: ' + req.cookies.name + ' 删除多条播放列表 ' + req.body + '失败');
+      return res.json({
+        rtn: -1,
+        message: 'fail'
+      });
+    } else {
+      logger.info('用户: ' + req.cookies.name + ' 删除多条播放列表 ' + req.body + '成功');
+      return res.json({
+        rtn: 0,
+        message: 'success'
+      });
+    }
+
+  });
+}
+
+exports.deleteusers2 = function(req, res) {
 
   return async.each(req.body, function(user, cb) {
     return User.findByIdAndRemove(Object(user), function(err,xUser) {
       if (err) {
         return res.send({
-          status: "fail"
+          rtn: -1,
+          message:"fail"
         });
       }
-      BoxUnionUser.remove({userId:user},function(err){
-        if(err){
-          console.log(err);
-        }
-        cb(null);
-      })
-      console.log(xUser);
-      MediaUnionUser.remove({departId:xUser.departId},function(err){
-      if(err){
-        console.log(err);
-      }
-    })
-    PlaylistUnionUser.remove({departId:xUser.departId},function(err){
-      if(err){
-        console.log(err);
-      }
-    })
-   ScheduleUnionUser.remove({departId:xUser.departId},function(err){
-      if(err){
-        console.log(err);
-      }
-    })
-    TaskUnionUser.remove({departId:xUser.departId},function(err){
-      if(err){
-        console.log(err);
-      }
-    })
+   //   BoxUnionUser.remove({userId:user},function(err){
+   //     if(err){
+   //       console.log(err);
+   //     }
+   //     cb(null);
+   //   })
+   //   console.log(xUser);
+   //   MediaUnionUser.remove({departId:xUser.departId},function(err){
+   //   if(err){
+   //     console.log(err);
+   //   }
+   // })
+   // PlaylistUnionUser.remove({departId:xUser.departId},function(err){
+   //   if(err){
+   //     console.log(err);
+   //   }
+   // })
+   //ScheduleUnionUser.remove({departId:xUser.departId},function(err){
+   //   if(err){
+   //     console.log(err);
+   //   }
+   // })
+   // TaskUnionUser.remove({departId:xUser.departId},function(err){
+   //   if(err){
+   //     console.log(err);
+   //   }
+   // })
     
     });
   }, function(err) {
     if (err) {
       return res.send({
-        status: "fail"
+        rtn: -2,
+        message:"fail"
       });
     }
     logger.info('用户: ' + req.cookies.username + ' 删除多用户 ' + req.body + ' 成功')
     return res.json({
-      status: "success"
+      rtn: 0,
+      message:"success"
     });
   });
 };
 
-exports.getUsers = function(req, res) {
+exports.array = function(req, res) {
   return User.find({
-    type: 'normal'
+    is_delete:0,
+    role: 'normal'
   }).exec(function(err, users) {
     var x;
     if (err) {
@@ -242,7 +278,7 @@ exports.getUsers = function(req, res) {
     }
     users = users || [];
     x = _.map(users, function(each) {
-      each = _.pick(each, '_id', 'username', 'name', 'password', 'activated');
+      each = _.pick(each, '_id', 'username', 'name', 'password', 'description', 'department');
       if (each.id === '') {
         each.id = each._id.toString();
       }
@@ -253,31 +289,56 @@ exports.getUsers = function(req, res) {
 };
 
 exports.userinfo = function(req, res) {
-  return res.json({
-    result: {
-      result: req.user
-    }
-  });
-};
-
-exports.updateUser = function(req, res) {
-  var user;
-  user = req.user;
-  return user.update(req.body).exec(function(err, user) {
-    if (err) {
-      return res.send({
-        status: "fail"
-      });
-    }
-    logger.info('用户: ' + req.cookies.username + ' 更新用户信息 ' + req.user.username + ' 成功')
+  return User.findOne({
+    _id: req.params.uid
+  }).exec(function(err, user) {
     return res.json({
-      status: "success"
+      rtn: 0,
+      message:"success",
+      user: {
+        name: user.name,
+        description: user.description,
+      }
     });
   });
+}
+
+//exports.updateUser = function(req, res) {
+//  var user;
+//  user = req.user;
+//  return user.update(req.body).exec(function(err, user) {
+//    if (err) {
+//      return res.send({
+//        status: "fail"
+//      });
+//    }
+//    logger.info('用户: ' + req.cookies.username + ' 更新用户信息 ' + req.user.username + ' 成功')
+//    return res.json({
+//      status: "success"
+//    });
+//  });
+//};
+
+exports.updateUser = function(req, res) {
+
+  console.log(req.body);
+  User.update({_id:req.body._id},{$set:req.body},function(err){
+    if(err){
+      console.log(err);
+      return res.json({
+        rtn: -1,
+        message:err
+      });
+    }
+    return res.json({
+      rtn: 0,
+      message:'success'
+    });
+  })
 };
 
 exports.changePassword = function(req, res) {
-  User.findById(Object(req.user.id)).exec(function(err, user) {
+  User.findById(req.params.uid).exec(function(err, user) {
     if (err) {
       return res.status(500).send({
         status: "fail"
@@ -309,80 +370,80 @@ exports.changePassword = function(req, res) {
 
   });
 };
-exports.permission = function(){
-  console.log(req.body);
-  return User.find({
-    id:req.body
-  }).exec(function(err, users) {
-    var x;
-    if (err) {
-      return res.json({
-        status: "fail"
-      });
-    }
-    users = users || [];
-    x = _.map(users, function(each) {
-      each = _.pick(each, '_id', 'username', 'name', 'password','activated');
-      if (each.id === '') {
-        each.id = each._id.toString();
-      }
-      return each;
-    });
-    return res.json(x);
-  });
-};
+//exports.permission = function(){
+//  console.log(req.body);
+//  return User.find({
+//    id:req.body
+//  }).exec(function(err, users) {
+//    var x;
+//    if (err) {
+//      return res.json({
+//        status: "fail"
+//      });
+//    }
+//    users = users || [];
+//    x = _.map(users, function(each) {
+//      each = _.pick(each, '_id', 'username', 'name', 'password','activated');
+//      if (each.id === '') {
+//        each.id = each._id.toString();
+//      }
+//      return each;
+//    });
+//    return res.json(x);
+//  });
+//};
 
-exports.authorize = function(req, res) {
-  return BoxUnionUser.find({
-    userId: req.user.id
-  }).exec(function(err, boxUnionUsers) {
-    if (err) {
-      return res.json({
-        status: "fail"
-      });
-    }
-    return async.each(boxUnionUsers,function(buu, callback) {
-      return buu.remove(function(err) {
-        if (err) {
-          return callback('remove buu fail');
-        }
-        return callback(null);
-      });
-    }, function(err) {
-      if (err) {
-        return res.json({
-          status: "fail",
-          message: err
-        });
-      }
-      return async.each(req.body,function(buu, callback) {
-        return BoxUnionUser.create({
-          userId: req.user.id,
-          boxId: buu.boxId,
-          look: buu.look,
-          setting:buu.setting
-        }, function(err, buu) {
-          if (err) {
-            return callback('create buu fail');
-          }
-          return callback(null);
-        });
-      }, function(err) {
-        if (err) {
-          return res.json({
-            status: "fail",
-            message: err
-          });
-        }
-        logger.info('用户: ' + req.cookies.username + ' 对用户: ' + req.user.id + ' 授权播放器成功')
-        return res.json({
-          status: 'success',
-          result: ''
-        });
-      });
-    });
-  });
-};
+//exports.authorize = function(req, res) {
+//  return BoxUnionUser.find({
+//    userId: req.user.id
+//  }).exec(function(err, boxUnionUsers) {
+//    if (err) {
+//      return res.json({
+//        status: "fail"
+//      });
+//    }
+//    return async.each(boxUnionUsers,function(buu, callback) {
+//      return buu.remove(function(err) {
+//        if (err) {
+//          return callback('remove buu fail');
+//        }
+//        return callback(null);
+//      });
+//    }, function(err) {
+//      if (err) {
+//        return res.json({
+//          status: "fail",
+//          message: err
+//        });
+//      }
+//      return async.each(req.body,function(buu, callback) {
+//        return BoxUnionUser.create({
+//          userId: req.user.id,
+//          boxId: buu.boxId,
+//          look: buu.look,
+//          setting:buu.setting
+//        }, function(err, buu) {
+//          if (err) {
+//            return callback('create buu fail');
+//          }
+//          return callback(null);
+//        });
+//      }, function(err) {
+//        if (err) {
+//          return res.json({
+//            status: "fail",
+//            message: err
+//          });
+//        }
+//        logger.info('用户: ' + req.cookies.username + ' 对用户: ' + req.user.id + ' 授权播放器成功')
+//        return res.json({
+//          status: 'success',
+//          result: ''
+//        });
+//      });
+//    });
+//  });
+//};
 
 
 /**
@@ -417,9 +478,6 @@ exports.getmediaSize = function(req,res){
 
     })
   })
-
-
-
 
 };
 

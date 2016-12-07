@@ -77,7 +77,7 @@
       if (json && json.rtn === 0) {
         return window.location.href = '/index';
       } else {
-        return popBy('#loginBtn', false, json.result);
+        return popBy('#loginBtn', false, json.message);
       }
     }).fail(function(a, b, c) {
       return console.log('error', a, b, c);

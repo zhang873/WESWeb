@@ -79,6 +79,8 @@ var CustomView = Backbone.View.extend({
         'click #createBtn': function() {
             $('#customCreate').prop('tmpCustomId', null);
             $('#customCreate').find('h4').html('新建');
+            $('#nameInputCreate').val('');
+            $('#descInputCreate').val('');
             $('#customCreate').modal('show');
         },
         'click #createCustom': 'createCustom',

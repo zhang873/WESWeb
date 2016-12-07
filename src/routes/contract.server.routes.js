@@ -3,19 +3,20 @@
  */
 var express = require('express')
 var contract = require('../controllers/contract.server.controller')
+var user = require('../controllers/user.server.controller')
 
 var app = express.Router()
 
 app.route('/contract')
-    .get(contract.index)
+    .get(user.requiresLogin, contract.index)
 
 app.route('/contract/create')
-    .get(contract.showEdit)
+    .get(user.requiresLogin, contract.showEdit)
 
 app.route('/contract/edit')
-    .get(contract.showEdit);
+    .get(user.requiresLogin, contract.showEdit);
 
 app.route('/wes/contracts')
-    .get(contract.list)
+    .get(user.requiresLogin, contract.list)
 
 module.exports = app

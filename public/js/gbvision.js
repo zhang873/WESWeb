@@ -5,9 +5,9 @@ var modifyuser;
 var userGet;
 function modalIputFocus($modalid,$txtid) {
     var id = $.cookie('token');
-    userGet = $.get('/user/'+id).done(function(result) {
-        $('#descriptionTxt').val(result.result.result.description);
-        modifyuser = result.result.result;
+    userGet = $.get('/wes/user/'+id).done(function(result) {
+        $('#descriptionTxt').val(result.user.description);
+        modifyuser = result.user;
         $($modalid).modal('show');
         $($modalid).on('shown.bs.modal', function (e) {
             $($txtid).focus();
@@ -57,7 +57,7 @@ function modifyPassword() {
     var newPassword = $("#newPasswordTxt").val().trim();
     $.ajax({
         type: "PUT",
-        url: "/user/"+ $.cookie('token')+"/password",
+        url: "/wes/user/"+ $.cookie('token')+"/password",
         data: JSON.stringify({oldpassword: hex_md5(originalPassword), newpassword: hex_md5(newPassword)}),
         contentType: "application/json; charset=utf-8",
         dataType: "json",

@@ -3,19 +3,20 @@
  */
 var express = require('express')
 var custom = require('../controllers/custom.server.controller')
+var user = require('../controllers/user.server.controller')
 
 var app = express.Router()
 
 app.route('/custom')
-    .get(custom.index)
+    .get(user.requiresLogin, custom.index)
 
 app.route('/wes/customs')
-    .get(custom.array)
+    .get(user.requiresLogin, custom.array)
 
 app.route('/wes/custom')
-    .get(custom.list)
-    .post(custom.add)
-    .delete(custom.delete)
-    .put(custom.modify)
+    .get(user.requiresLogin, custom.list)
+    .post(user.requiresLogin, custom.add)
+    .delete(user.requiresLogin, custom.delete)
+    .put(user.requiresLogin, custom.modify)
 
 module.exports = app

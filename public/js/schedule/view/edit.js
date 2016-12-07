@@ -2,9 +2,9 @@
  * Created by shgbit on 14-2-10.
  */
 
-var playlists = new Playlists;
+//var contracts = new Contracts;
 
-ScheduleView = Backbone.View.extend({
+ContractView = Backbone.View.extend({
     el: '#scheduleEdit',
     events: {
         'change #selectMonthday':'monthday',
@@ -316,4 +316,4 @@ MonthDayItemView = Backbone.View.extend({
     }
 });
 
-new ScheduleView();
+new ContractView();

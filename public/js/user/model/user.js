@@ -1,11 +1,12 @@
 User = Backbone.Model.extend({
-    urlRoot:'/user',
+    urlRoot:'/wes/user',
     default: {
         id:null,
         type:'',
+        username:'',
         name:'',
         password:'',
-        boxes:[]
+        department:''
     },
     initialize: function() {
     }
@@ -13,6 +14,6 @@ User = Backbone.Model.extend({
 
 /** Collection */
 Users = Backbone.Collection.extend({
-    url:'/users',
+    url:'/wes/users',
     model: User
 });

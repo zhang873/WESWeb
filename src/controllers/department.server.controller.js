@@ -125,16 +125,48 @@ exports.add = function(req, res) {
     })
 };
 
-exports.delete = function(req, res) {
+exports.modify = function(req, res) {
 
-    Department.update({_id:req.body._id},{$set:{is_delete:1}},function(err){
+    console.log(req.body);
+    Department.update({_id:req.body._id},{$set:req.body},function(err){
         if(err){
             console.log(err);
+            return res.json({
+                rtn: -1,
+                message:err
+            });
         }
         return res.json({
             rtn: 0,
             message:'success'
         });
     })
+};
+
+exports.delete = function(req, res) {
+    async.each(req.body, function(Id, callback){
+        Department.update({_id:Id},{$set:{is_delete:1}},function(err){
+            if(err){
+                console.log(err);
+                return callback(err)
+            }
+        })
+        callback(null)
+    }, function(err){
+        if (err) {
+            logger.info('用户: ' + req.cookies.name + ' 删除多条播放列表 ' + req.body + '失败');
+            return res.json({
+                rtn: -1,
+                message:'fail'
+            });
+        } else {
+            logger.info('用户: ' + req.cookies.name + ' 删除多条播放列表 ' + req.body + '成功');
+            return res.json({
+                rtn: 0,
+                message:'success'
+            });
+        }
+
+    });
 
 };

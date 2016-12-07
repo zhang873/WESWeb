@@ -13,6 +13,7 @@ exports.postlogin = function(req, res) {
 
   if ((req.body.username != null) && (req.body.password != null)) {
     return User.findOne({
+      is_delete: 0,
       username: req.body.username
     }).exec(function(err, result) {
       if (err) {
@@ -25,7 +26,7 @@ exports.postlogin = function(req, res) {
       if (result && result.password === req.body.password) {
         res.cookie('token', result.token, 30);
         res.cookie('name', result.name, 30);
-        //res.cookie('type', result.type, 30);
+        res.cookie('role', result.role, 30);
         //res.cookie('authority',result.authority.toString());
 	    //res.cookie('departId', result.departId, 30);
         logger.info('用户: ' + req.body.username + ' 登录系统成功');
@@ -51,7 +52,7 @@ exports.postlogin = function(req, res) {
 exports.logout = function(req, res) {
   res.clearCookie('token');
   res.clearCookie('username');
-  //res.clearCookie('type');
+  res.clearCookie('role');
   //res.clearCookie('authority');
   //res.clearCookie('departId');
   return res.redirect('/login');

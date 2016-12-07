@@ -1,235 +1,251 @@
 var users = new Users;
+var departments = new Departments;
 
 _.templateSettings = {
     interpolate: /\{\{(.+?)\}\}/g
 };
 
-GroupView = Backbone.View.extend({
-    tagName: 'tr',
-    template: _.template($('#group-template').html()),
+departments.fetch();
 
-    initialize: function() {
-    },
+function getDepartmentName(id){
+    var departmentrModels = departments.models;
 
-    render: function() {
-        var p = this.model.toJSON();
-        this.$el.html(this.template(p));
-        return this;
+    var $name = '';
+
+    for(var i = 0; i<departmentrModels.length;i++){
+        if(id == departmentrModels[i].attributes._id){
+            $name = departmentrModels[i].attributes.name;
+            return $name;
+        }
     }
-});
-function hasEle(par,chil){
-  var has = false ;
-  for(var i=0;i<par.length;i++){
-    if (par[i]==chil){
-      has = true;
-      return has;
-    } 
-
-  }
-  return has;
 }
 
-GroupListView = Backbone.View.extend({
-    el: '#group-list',
-
-    events: {
-        'click #allGroupView': 'selectAll',
-        'click .groupChk': 'selectOne',
-       // 'click .allGroupView':'selectAll',
-        'click .groupChkSet':'selectOneSet',
-        'click #allGroupViewSet':'selectAllGroupSet'
-    },
-
-    initialize: function() {
-        this.listenTo(groups, 'add', this.addOne);
-        groups.fetch();
-    },
-
-    render: function() {
-        // 若做排序，重写此方法。
-
-    },
-
-    addOne: function(group) {
-        var view = new GroupView({model:group});
-        this.$('tbody').append(view.render().el);
-
-    },
-
-    selectAll: function(e) {
-        var publishGroups = function(m){
-            for(var a=0;a<groups.models.length;a++){
-                for(var j=0;j<groups.models[a].attributes.boxes.length;j++){
-                    var $id=groups.models[a].attributes.boxes[j];
-                    $(".boxChk[value='" + $id +  "']").prop('checked', m);
-                };
-            }
-        }
-        var publishGroupsSet = function(m){
-            for(var a=0;a<groups.models.length;a++){
-                for(var j=0;j<groups.models[a].attributes.boxes.length;j++){
-                    var $id=groups.models[a].attributes.boxes[j];
-                    $(".boxChkSet[value='" + $id +  "']").prop('checked', m);
-                };
-            }
-        }
-        if(this.$('#allGroupView:checked').length > 0) {
-            this.$('.groupChk').prop('checked', true);
-            publishGroups(true);
-
-        } else {
-            this.$('.groupChk').prop('checked', false);
-            this.$('#allGroupViewSet').prop('checked', false);
-            this.$('.groupChkSet').prop('checked', false);
-            publishGroups(false);
-            publishGroupsSet(false);
-
-        }
-        if (e && e.stopPropagation) {
-            //支持W3C
-            e.stopPropagation();
-        } else {
-            //IE的方式
-            window.event.cancelBubble = true;
-        }
-    },
-    selectAllGroupSet: function(e) {
-        var publishGroups = function(m){
-            for(var a=0;a<groups.models.length;a++){
-                for(var j=0;j<groups.models[a].attributes.boxes.length;j++){
-                    var $id=groups.models[a].attributes.boxes[j];
-                    $(".boxChk[value='" + $id +  "']").prop('checked', m);
-                };
-            }
-        }
-        var publishGroupsSet = function(m){
-            for(var a=0;a<groups.models.length;a++){
-                for(var j=0;j<groups.models[a].attributes.boxes.length;j++){
-                    var $id=groups.models[a].attributes.boxes[j];
-                    $(".boxChkSet[value='" + $id +  "']").prop('checked', m);
-                };
-            }
-        }
-        if(this.$('#allGroupViewSet:checked').length > 0) {
-            this.$('#allGroupView').prop('checked', true);
-            this.$('.groupChk').prop('checked', true);
-            this.$('.groupChkSet').prop('checked', true);
-            publishGroups(true);
-            publishGroupsSet(true);
-        } else {/*
-            this.$('.groupChk').prop('checked', false);
-            this.$('#allGroupView').prop('checked', false);*/
-            //this.$('.groupChkSet').prop('checked', false);
-            //publishGroups(false);
-            this.$('#allGroupViewSet').prop('checked', false);
-            this.$('.groupChkSet').prop('checked', false);
-            publishGroupsSet(false);
-
-        }
-        if (e && e.stopPropagation) {
-            //支持W3C
-            e.stopPropagation();
-        } else {
-            //IE的方式
-            window.event.cancelBubble = true;
-        }
-    },
-    selectOne: function(e) {
-        var ids=[];
-        var pids=[];
-        var tids=[];
-        if(this.$('.groupChk:checked').length === this.$('.groupChk').length) {
-            this.$('#allGroupView').prop('checked', true);
-            if(this.$('.groupChkSet:checked').length === this.$('.groupChkSet').length) {
-                this.$('#allGroupViewSet').prop('checked', true);
-            }
-
-        } else {
-            this.$('#allGroupView').prop('checked', false);
-            this.$('#allGroupViewSet').prop('checked', false);
-        }
-        $(e.target).parent('span').siblings('span').find('.groupChkSet').prop('checked',false);
-        $(".groupChk:checked").each(function(i, o) {
-            ids.push($(o).val());
-        });
-
-        $(".groupChkSet:checked").each(function(i,o){
-           // $(e.target).parent('span').siblings('span').find('.boxChkSet').prop('checked',true)
-
-        })
-        for(var i=0;i<ids.length;i++){
-            pids.push(groups.get(Object(ids[i])));
-        }
-        if(e.target.checked){
-            if(pids.length!=0){
-                for(var a=0;a<pids.length;a++){
-                    for(var j=0;j<pids[a].attributes.boxes.length;j++){
-                        var $id=pids[a].attributes.boxes[j];
-                        $(".boxChk[value='" + $id +  "']").prop('checked', true);
-                    };
-                }
-            }
-        }else{
-            tids = groups.get(Object(e.target.value));
-            console.log(tids);
-                for(var j=0;j<tids.attributes.boxes.length;j++){
-                    var $id=tids.attributes.boxes[j];
-                    $(".boxChk[value='" + $id +  "']").prop('checked', false);
-                    $(".boxChkSet[value='" + $id +  "']").prop('checked', false);
-                };
-
-        }
-        //$(".boxChk").prop('checked', false);
-
-    },
-    selectOneSet: function(e) {
-        var ids=[];
-        var pids=[];
-        var tids;
-
-        if(this.$('.groupChkSet:checked').length === this.$('.groupChkSet').length) {
-            this.$('#allGroupViewSet').prop('checked', true);
-            this.$('#allGroupView').prop('checked', true);
-
-
-        } else {
-            this.$('#allGroupViewSet').prop('checked', false);
-
-
-        }
-        $(".groupChkSet:checked").each(function(i,o){
-            $(o).closest('td').find('.groupChk').prop('checked',true);
-            $(".groupChk:checked").each(function(i, o) {
-                ids.push($(o).val());
-            });
-
-
-        })
-        for(var i=0;i<ids.length;i++){
-            pids.push(groups.get(Object(ids[i])));
-
-        }
-        if(e.target.checked){
-            if(pids.length!=0){
-                for(var a=0;a<pids.length;a++){
-                    for(var j=0;j<pids[a].attributes.boxes.length;j++){
-                        var $id=pids[a].attributes.boxes[j];
-                        $(".boxChk[value='" + $id +  "']").prop('checked', true);
-                        $(".boxChkSet[value='" + $id +  "']").prop('checked', true);
-                    };
-                }
-            }
-        }else{
-            tids = groups.get(Object(e.target.value));
-            for(var j=0;j<tids.attributes.boxes.length;j++){
-                var $id=tids.attributes.boxes[j];
-                $(".boxChkSet[value='" + $id +  "']").prop('checked', false);
-            };
-
-        }
-    }
-
-});
+//GroupView = Backbone.View.extend({
+//    tagName: 'tr',
+//    template: _.template($('#group-template').html()),
+//
+//    initialize: function() {
+//    },
+//
+//    render: function() {
+//        var p = this.model.toJSON();
+//        this.$el.html(this.template(p));
+//        return this;
+//    }
+//});
+//function hasEle(par,chil){
+//  var has = false ;
+//  for(var i=0;i<par.length;i++){
+//    if (par[i]==chil){
+//      has = true;
+//      return has;
+//    }
+//
+//  }
+//  return has;
+//}
+//
+//GroupListView = Backbone.View.extend({
+//    el: '#group-list',
+//
+//    events: {
+//        'click #allGroupView': 'selectAll',
+//        'click .groupChk': 'selectOne',
+//       // 'click .allGroupView':'selectAll',
+//        'click .groupChkSet':'selectOneSet',
+//        'click #allGroupViewSet':'selectAllGroupSet'
+//    },
+//
+//    initialize: function() {
+//        this.listenTo(groups, 'add', this.addOne);
+//        groups.fetch();
+//    },
+//
+//    render: function() {
+//        // 若做排序，重写此方法。
+//
+//    },
+//
+//    addOne: function(group) {
+//        var view = new GroupView({model:group});
+//        this.$('tbody').append(view.render().el);
+//
+//    },
+//
+//    selectAll: function(e) {
+//        var publishGroups = function(m){
+//            for(var a=0;a<groups.models.length;a++){
+//                for(var j=0;j<groups.models[a].attributes.boxes.length;j++){
+//                    var $id=groups.models[a].attributes.boxes[j];
+//                    $(".boxChk[value='" + $id +  "']").prop('checked', m);
+//                };
+//            }
+//        }
+//        var publishGroupsSet = function(m){
+//            for(var a=0;a<groups.models.length;a++){
+//                for(var j=0;j<groups.models[a].attributes.boxes.length;j++){
+//                    var $id=groups.models[a].attributes.boxes[j];
+//                    $(".boxChkSet[value='" + $id +  "']").prop('checked', m);
+//                };
+//            }
+//        }
+//        if(this.$('#allGroupView:checked').length > 0) {
+//            this.$('.groupChk').prop('checked', true);
+//            publishGroups(true);
+//
+//        } else {
+//            this.$('.groupChk').prop('checked', false);
+//            this.$('#allGroupViewSet').prop('checked', false);
+//            this.$('.groupChkSet').prop('checked', false);
+//            publishGroups(false);
+//            publishGroupsSet(false);
+//
+//        }
+//        if (e && e.stopPropagation) {
+//            //支持W3C
+//            e.stopPropagation();
+//        } else {
+//            //IE的方式
+//            window.event.cancelBubble = true;
+//        }
+//    },
+//    selectAllGroupSet: function(e) {
+//        var publishGroups = function(m){
+//            for(var a=0;a<groups.models.length;a++){
+//                for(var j=0;j<groups.models[a].attributes.boxes.length;j++){
+//                    var $id=groups.models[a].attributes.boxes[j];
+//                    $(".boxChk[value='" + $id +  "']").prop('checked', m);
+//                };
+//            }
+//        }
+//        var publishGroupsSet = function(m){
+//            for(var a=0;a<groups.models.length;a++){
+//                for(var j=0;j<groups.models[a].attributes.boxes.length;j++){
+//                    var $id=groups.models[a].attributes.boxes[j];
+//                    $(".boxChkSet[value='" + $id +  "']").prop('checked', m);
+//                };
+//            }
+//        }
+//        if(this.$('#allGroupViewSet:checked').length > 0) {
+//            this.$('#allGroupView').prop('checked', true);
+//            this.$('.groupChk').prop('checked', true);
+//            this.$('.groupChkSet').prop('checked', true);
+//            publishGroups(true);
+//            publishGroupsSet(true);
+//        } else {/*
+//            this.$('.groupChk').prop('checked', false);
+//            this.$('#allGroupView').prop('checked', false);*/
+//            //this.$('.groupChkSet').prop('checked', false);
+//            //publishGroups(false);
+//            this.$('#allGroupViewSet').prop('checked', false);
+//            this.$('.groupChkSet').prop('checked', false);
+//            publishGroupsSet(false);
+//
+//        }
+//        if (e && e.stopPropagation) {
+//            //支持W3C
+//            e.stopPropagation();
+//        } else {
+//            //IE的方式
+//            window.event.cancelBubble = true;
+//        }
+//    },
+//    selectOne: function(e) {
+//        var ids=[];
+//        var pids=[];
+//        var tids=[];
+//        if(this.$('.groupChk:checked').length === this.$('.groupChk').length) {
+//            this.$('#allGroupView').prop('checked', true);
+//            if(this.$('.groupChkSet:checked').length === this.$('.groupChkSet').length) {
+//                this.$('#allGroupViewSet').prop('checked', true);
+//            }
+//
+//        } else {
+//            this.$('#allGroupView').prop('checked', false);
+//            this.$('#allGroupViewSet').prop('checked', false);
+//        }
+//        $(e.target).parent('span').siblings('span').find('.groupChkSet').prop('checked',false);
+//        $(".groupChk:checked").each(function(i, o) {
+//            ids.push($(o).val());
+//        });
+//
+//        $(".groupChkSet:checked").each(function(i,o){
+//           // $(e.target).parent('span').siblings('span').find('.boxChkSet').prop('checked',true)
+//
+//        })
+//        for(var i=0;i<ids.length;i++){
+//            pids.push(groups.get(Object(ids[i])));
+//        }
+//        if(e.target.checked){
+//            if(pids.length!=0){
+//                for(var a=0;a<pids.length;a++){
+//                    for(var j=0;j<pids[a].attributes.boxes.length;j++){
+//                        var $id=pids[a].attributes.boxes[j];
+//                        $(".boxChk[value='" + $id +  "']").prop('checked', true);
+//                    };
+//                }
+//            }
+//        }else{
+//            tids = groups.get(Object(e.target.value));
+//            console.log(tids);
+//                for(var j=0;j<tids.attributes.boxes.length;j++){
+//                    var $id=tids.attributes.boxes[j];
+//                    $(".boxChk[value='" + $id +  "']").prop('checked', false);
+//                    $(".boxChkSet[value='" + $id +  "']").prop('checked', false);
+//                };
+//
+//        }
+//        //$(".boxChk").prop('checked', false);
+//
+//    },
+//    selectOneSet: function(e) {
+//        var ids=[];
+//        var pids=[];
+//        var tids;
+//
+//        if(this.$('.groupChkSet:checked').length === this.$('.groupChkSet').length) {
+//            this.$('#allGroupViewSet').prop('checked', true);
+//            this.$('#allGroupView').prop('checked', true);
+//
+//
+//        } else {
+//            this.$('#allGroupViewSet').prop('checked', false);
+//
+//
+//        }
+//        $(".groupChkSet:checked").each(function(i,o){
+//            $(o).closest('td').find('.groupChk').prop('checked',true);
+//            $(".groupChk:checked").each(function(i, o) {
+//                ids.push($(o).val());
+//            });
+//
+//
+//        })
+//        for(var i=0;i<ids.length;i++){
+//            pids.push(groups.get(Object(ids[i])));
+//
+//        }
+//        if(e.target.checked){
+//            if(pids.length!=0){
+//                for(var a=0;a<pids.length;a++){
+//                    for(var j=0;j<pids[a].attributes.boxes.length;j++){
+//                        var $id=pids[a].attributes.boxes[j];
+//                        $(".boxChk[value='" + $id +  "']").prop('checked', true);
+//                        $(".boxChkSet[value='" + $id +  "']").prop('checked', true);
+//                    };
+//                }
+//            }
+//        }else{
+//            tids = groups.get(Object(e.target.value));
+//            for(var j=0;j<tids.attributes.boxes.length;j++){
+//                var $id=tids.attributes.boxes[j];
+//                $(".boxChkSet[value='" + $id +  "']").prop('checked', false);
+//            };
+//
+//        }
+//    }
+//
+//});
 
 
 UserView = Backbone.View.extend({
@@ -244,6 +260,7 @@ UserView = Backbone.View.extend({
         'click .activateUser':'activate',
         'click .authorize': 'showAuthorizeModal',
         'click .resetPassword': 'resetPassword',
+        'click .editUser': 'editUser',
         'click .permission':'showPermission'
     },
 
@@ -256,16 +273,17 @@ UserView = Backbone.View.extend({
 
     render: function() {
         var data = this.model.toJSON();
-        this.$el.html(this.template({id: data.id , name: data.name, type: data.type,
-            description: data.description}));
+        var departname = getDepartmentName(data.department);
+        this.$el.html(this.template({id: data._id , name: data.name, type: data.type, username: data.username,
+            description: data.description, department: departname}));
 
-        if(data.activated) {
-            this.$el.find('.activateUser').attr('title', '冻结').html('冻结');
-//            this.$el.find('.activateUser').attr('title', '冻结').children('span').addClass('glyphicon-remove-sign').removeClass('glyphicon-ok-sign');
-        } else {
-            this.$el.find('.activateUser').attr('title', '激活').html('激活');
-//            this.$el.find('.activateUser').attr('title', '激活').children('span').addClass('glyphicon-ok-sign').removeClass('glyphicon-remove-sign');
-        }
+//        if(data.activated) {
+//            this.$el.find('.activateUser').attr('title', '冻结').html('冻结');
+////            this.$el.find('.activateUser').attr('title', '冻结').children('span').addClass('glyphicon-remove-sign').removeClass('glyphicon-ok-sign');
+//        } else {
+//            this.$el.find('.activateUser').attr('title', '激活').html('激活');
+////            this.$el.find('.activateUser').attr('title', '激活').children('span').addClass('glyphicon-ok-sign').removeClass('glyphicon-remove-sign');
+//        }
 
         return this;
     },
@@ -279,13 +297,19 @@ UserView = Backbone.View.extend({
     },
 
     deleteUser:function() {
-        var xUser = this.model;
-        if(confirm('确认删除吗?')) {
-            xUser.destroy().done(function() {
-//                this.$el.remove();
-                users.remove(xUser);
-            }).error(function() {
-                alert('未知的错误');
+
+        if(confirm("确认删除吗？")) {
+            var data = this.model.toJSON();
+            this.model.destroy();
+            var $ids = [];
+            $ids.push(data._id);
+            $.ajax({
+                type:'DELETE',
+                url: '/wes/user',
+                contentType: 'application/json',
+                data: JSON.stringify($ids),
+            }).done(function(res){
+                console.log(res);
             });
         }
     },
@@ -337,16 +361,35 @@ UserView = Backbone.View.extend({
 
             xUser.set('password', pwd);
 
-            xUser.save()
-                .done(function() {
-                    alert('重置成功');
-                })
-                .error(function() {
-                    alert('未知错误');
-                })
+            $.ajax({
+                type:'PUT',
+                url: '/wes/user',
+                contentType: 'application/json',
+                data: JSON.stringify(xUser),
+            }).done(function() {
+                alert('重置成功');
+            })
+            .error(function() {
+                alert('未知错误');
+            })
         }
     },
 
+    editUser : function() {
+        var tmpUser = this.model.toJSON();
+
+        $('#createUserModal').find('h4').html('修改用户');
+        $('#createUserModal').prop('tmpUserId', tmpUser._id);
+
+        $('#usernameTxt').val(tmpUser.username);
+        $('#passwordTxt').val('');
+        $('#confirmTxt').val('');
+        $('#nameTxt').val(tmpUser.name);
+        $("#children").val(tmpUser.department);
+        $('#txtDescription').val(tmpUser.description);
+
+        $('#createUserModal').modal('show');
+    },
     showPermission:function(){
         var xUser = this.model;
         console.log(xUser);
@@ -404,7 +447,8 @@ UsersView = Backbone.View.extend({
 
         if(query !== '') {
             xUsers = xUsers.filter(function(user) {
-                return user.get('name').indexOf(query) > -1;
+                return user.get('name').indexOf(query) > -1
+                    || user.get('username').indexOf(query) > -1;
             });
             userView.render(xUsers);
         } else {
@@ -418,6 +462,7 @@ UsersView = Backbone.View.extend({
     },
 
     showCreateModal: function() {
+        $('#createUserModal').prop('tmpUserId', null);
         $('#createUserModal').modal('show');
     },
 
@@ -442,28 +487,37 @@ UsersView = Backbone.View.extend({
     },
 
     deleteUsers: function() {
-        var ids = []
+        var $ids = []
         $(".chkUserItem:checked").each(function(i, o) {
-            ids.push($(o).val());
+            $ids.push($(o).val());
         });
 
-        if(ids.length == 0) return popBy("#deleteBtn", false, '请先选择需要删除的用户');
+        if($ids.length == 0) {
+            return popBy("#deleteBtn", false, '请先选择需要删除的用户');
+        }
 
-        var xUsers = [];
-        $.each(ids,function(i, o) {
-            xUsers.push(users.get(o));
-        });
+        //var xUsers = [];
+        //$.each($ids,function(i, o) {
+        //    xUsers.push(users.get(o));
+        //});
 
         if(confirm("确认删除吗？")) {
             $.ajax({
                 type: "DELETE",
-                url: "/users",
-                data: JSON.stringify(ids),
+                url: "/wes/user",
+                data: JSON.stringify($ids),
                 contentType: "application/json; charset=utf-8"
             }).done(function (jqXHR) {
-                    users.remove(xUsers);
-                    $(".chkUserItem:checked").parents('tr').remove();
-                    $('#allUser').prop('checked', false);
+
+                $.each($ids,function(i,o) {
+                    var $temp = users.get(o);
+                    users.remove($temp);
+                })
+                $(".chkUserItem:checked").parents('tr').remove();
+
+                    //users.remove(xUsers);
+                    //$(".chkUserItem:checked").parents('tr').remove();
+                    //$('#allUser').prop('checked', false);
                 }).fail(function(a,b,c) {
                     console.log('error',a,b,c);
                 });
@@ -473,50 +527,94 @@ UsersView = Backbone.View.extend({
     createUser: function() {
 
         var xUser = {};
+        var username = $("#usernameTxt").val().trim();
         var name = $("#nameTxt").val().trim();
         var password = $("#passwordTxt").val().trim();
-        var description = $("#txtDescription").val().trim();
+        var description = $("#txtDescription").val();
+        var department = $('#children').val();
 
         var reg = /[<>]/ig;
 
-        if(!this.validateName() || !this.validatePassword() || !this.confirmPassword() )
-            return false;
+        var tmpUserId = $('#createUserModal').prop('tmpUserId');
+        console.log(tmpUserId);
 
-        if(reg.test(description)) return popBy('#txtDescription', false, '个人描述含有特殊字符<、>');
+        if (reg.test(description)) return popBy('#txtDescription', false, '个人描述含有特殊字符<、>');
 
+        xUser.username = username;
         xUser.name = name;
-        xUser.password = hex_md5(password);
+        xUser.department = department;
         xUser.description = description;
-        xUser.boxes = [];
         xUser.type = 'normal';
 
-        users.create(xUser, {
-                wait:true,
-                success:function(model, json, jqXHR) {
-                    $('#createUserModal').modal('hide');
-                    $("#nameTxt").val('');
-                    $("#passwordTxt").val('');
-                    $("#confirmTxt").val('');
-                    $("#txtDescription").val('');
-                },
-                error: function(model, jqXHR, o) {
-                    console.log(jqXHR)
-                    if(jqXHR.status === 409) {
-                        return popBy('#nameTxt', false, '用户名已存在');
-                    }else {
-                        alert('未知错误');
-                    }
+        if (!tmpUserId) {
+            if (!this.validateName() || !this.validatePassword() || !this.confirmPassword())
+                return false;
 
+            xUser.password = hex_md5(password);
+
+            users.create(xUser, {
+                    wait: true,
+                    success: function (model, json, jqXHR) {
+                        $('#createUserModal').modal('hide');
+                        $("#usernameTxt").val('');
+                        $("#nameTxt").val('');
+                        $("#passwordTxt").val('');
+                        $("#confirmTxt").val('');
+                        $("#txtDescription").val('');
+                    },
+                    error: function (model, jqXHR, o) {
+                        console.log(jqXHR)
+                        if (jqXHR.status === 409) {
+                            return popBy('#usernameTxt', false, '用户名已存在');
+                        } else {
+                            alert('未知错误');
+                        }
+
+                    }
                 }
+            )
+        } else {
+            if (!this.validateName())
+                return false;
+
+            xUser._id = tmpUserId;
+
+            if (password) {
+                xUser.password = hex_md5(password);
             }
-        )
+
+            $.ajax({
+                type:'PUT',
+                url: '/wes/user',
+                contentType: 'application/json',
+                data: JSON.stringify(xUser),
+            }).done(function() {
+                $('#createUserModal').modal('hide');
+                $("#usernameTxt").val('');
+                $("#nameTxt").val('');
+                $("#passwordTxt").val('');
+                $("#confirmTxt").val('');
+                $("#txtDescription").val('');
+                location.reload();
+            }).error(function() {
+                alert('未知错误');
+            })
+        }
     },
 
     initialize: function() {
         this.listenTo(users, 'add', this.addOne);
         users.fetch();
-        
-
+        var children = this.$('#children');
+        departments.fetch().done(function(models,status,jqXHR) {
+            var tmpDepartments = departments.filter(function() {
+                return true;
+            });
+            tmpDepartments.reverse();
+            $.each(tmpDepartments,function(i,o){
+                children.append('<option value=' + o.get('_id')  + '>' + o.get('name') + '</option>');
+            });
+        });
     },
     render: function(users) {
         $('#user-list').children('tbody').empty();
@@ -576,11 +674,11 @@ UsersView = Backbone.View.extend({
                 data: JSON.stringify(gids),
                 contentType: "application/json; charset=utf-8"
             }).done(function (jqXHR) {
-                    $('#allUser, .chkUserItem').prop('checked', false);
-                    $('#modalBoxes').modal('hide');
-                }).fail(function(a,b,c) {
-                    console.log('error',a,b,c);
-                });
+                $('#allUser, .chkUserItem').prop('checked', false);
+                $('#modalBoxes').modal('hide');
+            }).fail(function(a,b,c) {
+                console.log('error',a,b,c);
+            });
         location.href ='/user'
     },
     permission:function(){
@@ -636,23 +734,23 @@ UsersView = Backbone.View.extend({
     },
 
     validateName: function() {
-        var $name = $("#nameTxt").val().trim();
+        var $username = $("#usernameTxt").val().trim();
         var reg = /^[a-zA-Z0-9_\-]+$/ig;
 //        var validateName = validatePublicName($name);
         var $message="";
         var $flag=true;
-        if($name === '') {
+        if($username === '') {
             $message="用户名不能为空";
             $flag=false;
-        }else if($name.getRealLength() < 4 || $name.getRealLength() > 20)
+        }else if($username.getRealLength() < 4 || $username.getRealLength() > 20)
         {
             $message="用户名长度只能为4-20位";
             $flag=false;
-        }else if(!$name.match(reg)) {
+        }else if(!$username.match(reg)) {
             $message="用户名只能为英文、数字、下划线和减号"
             $flag=false;
         }
-        if(!popBy("#nameTxt",$flag,$message)) return false;
+        if(!popBy("#usernameTxt",$flag,$message)) return false;
         return true;
     },
 
@@ -725,4 +823,4 @@ UsersView = Backbone.View.extend({
 
 
 var userView = new UsersView;
-var groupListView = new GroupListView;
+//var groupListView = new GroupListView;

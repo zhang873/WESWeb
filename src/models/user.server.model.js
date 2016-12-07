@@ -16,15 +16,22 @@ var UserSchema = new Schema({
     type: String,
     "default":''
   },
-  //role: String,
+  role: {
+    type: String,
+    "default":'normal'
+  },
+  department: {
+    type: String,
+    "default":''
+  },
   token: {
     type: String,
     "default": ''
   },
-  //activated: {
-  //  type: Boolean,
-  //  "default": false
-  //},
+  description: {
+    type: String,
+    "default": ''
+  },
   phone: {
     type: String,
     "default": ''

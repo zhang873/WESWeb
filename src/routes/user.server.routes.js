@@ -3,26 +3,28 @@ var user = require('../controllers/user.server.controller');
 
 var app = express.Router()
 
-//app.route('/admin/reset')
-//  .put(user.requiresLogin, user.adminReset);
+app.route('/admin/reset')
+  .put(user.requiresLogin, user.adminReset);
 
 app.route('/user')
   .get(user.requiresLogin, user.index)
-  .post(user.requiresLogin, user.newUser);
 
+app.route('/wes/users')
+    .get(user.requiresLogin, user.array)
 
-//app.route('/users')
-//  .get(user.requiresLogin, user.getUsers)
-//  .delete(user.requiresLogin, user.deleteusers);
+app.route('/wes/user')
+    .post(user.requiresLogin, user.newUser)
+    .put(user.requiresLogin, user.updateUser)
+    .delete(user.requiresLogin, user.deleteusers)
+
+app.route('/wes/user/:uid')
+  .get(user.requiresLogin, user.userinfo)
 //
-//app.route('/user/:uid')
-//  .get(user.requiresLogin, user.userinfo)
-//  .put(user.requiresLogin, user.updateUser)
-//  .delete(user.requiresLogin, user.deleteuser);
+//  .delete(user.requiresLogin, user.deleteuser)
 //
-//app.route('/user/:uid/password')
-//  .put(user.requiresLogin, user.changePassword);
-//
+app.route('/wes/user/:uid/password')
+  .put(user.requiresLogin, user.changePassword)
+
 //app.route('/authorize/:uid')
 //  .post(user.requiresLogin, user.authorize);
 //
