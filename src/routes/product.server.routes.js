@@ -3,15 +3,20 @@
  */
 var express = require('express')
 var product = require('../controllers/product.server.controller')
+var user = require('../controllers/user.server.controller')
 
 var app = express.Router()
 
-app.route('/wes/product')
-    .get(product.list)
-    .post(product.add)
-    .delete(product.delete)
-
 app.route('/product')
-    .get(product.index)
+    .get(user.requiresLogin, product.index)
+
+app.route('/wes/products')
+    .get(user.requiresLogin, product.array)
+
+app.route('/wes/product')
+    .get(user.requiresLogin, product.list)
+    .post(user.requiresLogin, product.add)
+    .delete(user.requiresLogin, product.delete)
+    .put(user.requiresLogin, product.modify)
 
 module.exports = app

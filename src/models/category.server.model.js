@@ -5,13 +5,9 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var _ = require('lodash');
 
-var ProductSchema = new Schema({
+var CategorySchema = new Schema({
 
     name: {
-        type:String,
-        "default":''
-    },
-    category: {
         type:String,
         "default":''
     },
@@ -33,4 +29,4 @@ var ProductSchema = new Schema({
     }
 });
 
-mongoose.model('Product', ProductSchema);
+mongoose.model('Category', CategorySchema);

@@ -9,7 +9,7 @@ var Sales = mongoose.model('Sales')
 
 exports.index = function(req, res) {
     return res.render('contract/index', {
-        title: '首页'
+        title: '合同'
     });
 };
 

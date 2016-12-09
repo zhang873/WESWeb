@@ -9,13 +9,13 @@ var Custom = mongoose.model('Custom')
 
 exports.index = function(req, res) {
     return res.render('custom', {
-        title: '¿Í»§'
+        title: 'å®¢æˆ·'
     });
 };
 
 exports.array = function(req, res) {
 
-    var customs = [];
+    //var customs = [];
 
     Custom.find({
         is_delete : 0
@@ -95,7 +95,7 @@ exports.add = function(req, res) {
         if (custom) {
             return res.json({
                 rtn: -2,
-                message:'ÒÑ´æÔÚ'
+                message:'å·²å­˜åœ¨'
             });
         }
 
@@ -150,13 +150,13 @@ exports.delete = function(req, res) {
         callback(null)
     }, function(err){
         if (err) {
-            logger.info('ÓÃ»§: ' + req.cookies.name + ' É¾³ı¶àÌõ²¥·ÅÁĞ±í ' + req.body + 'Ê§°Ü');
+            logger.info('ç”¨æˆ·: ' + req.cookies.name + ' åˆ é™¤å¤šæ¡æ’­æ”¾åˆ—è¡¨ ' + req.body + 'å¤±è´¥');
             return res.json({
                 rtn: -1,
                 message:'fail'
             });
         } else {
-            logger.info('ÓÃ»§: ' + req.cookies.name + ' É¾³ı¶àÌõ²¥·ÅÁĞ±í ' + req.body + '³É¹¦');
+            logger.info('ç”¨æˆ·: ' + req.cookies.name + ' åˆ é™¤å¤šæ¡æ’­æ”¾åˆ—è¡¨ ' + req.body + 'æˆåŠŸ');
             return res.json({
                 rtn: 0,
                 message:'success'

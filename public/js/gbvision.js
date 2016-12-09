@@ -135,7 +135,7 @@ function weekday(obj) {
 
 function datePick(stId,edId,isStart){
     $(edId).datetimepicker('remove');
-    var tmpdateSt = new Date();
+    var tmpdateSt = null;
     var tmpdateEd = null;
     var tmpdateInit = new Date();
     if($(edId).val() !== '') {

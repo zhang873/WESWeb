@@ -11,159 +11,49 @@
 
 {% block main %}
 
-<!--<script>-->
-  <!--var __slice = Array.prototype.slice;-->
-  <!--var __hasProp = Object.prototype.hasOwnProperty;-->
-  <!--var __bind = function(fn, me) {-->
-    <!--return function() {-->
-      <!--return fn.apply(me, arguments);-->
-    <!--};-->
-  <!--};-->
-  <!--var __extends = function(child, parent) {-->
-    <!--for (var key in parent) {-->
-      <!--if (__hasProp.call(parent, key)) child[key] = parent[key];-->
-    <!--}-->
-    <!--function ctor() {-->
-      <!--this.constructor = child;-->
-    <!--}-->
-    <!--ctor.prototype = parent.prototype;-->
-    <!--child.prototype = new ctor;-->
-    <!--child.__super__ = parent.prototype;-->
-    <!--return child;-->
-  <!--};-->
-  <!--var __indexOf = Array.prototype.indexOf ||-->
-          <!--function(item) {-->
-            <!--for (var i = 0, l = this.length; i < l; i++) {-->
-              <!--if (this[i] === item) return i;-->
-            <!--}-->
-            <!--return -1;-->
-          <!--};-->
-  <!--(function() {-->
-    <!--this.isSave = false;-->
-    <!--return window.onbeforeunload = function() {-->
-      <!--if (!isSave) {-->
-        <!--return '确认离开吗?未保存的数据将丢失';-->
-      <!--}-->
-    <!--};-->
-  <!--}).call(this);-->
+<script>
+  var __slice = Array.prototype.slice;
+  var __hasProp = Object.prototype.hasOwnProperty;
+  var __bind = function(fn, me) {
+    return function() {
+      return fn.apply(me, arguments);
+    };
+  };
+  var __extends = function(child, parent) {
+    for (var key in parent) {
+      if (__hasProp.call(parent, key)) child[key] = parent[key];
+    }
+    function ctor() {
+      this.constructor = child;
+    }
+    ctor.prototype = parent.prototype;
+    child.prototype = new ctor;
+    child.__super__ = parent.prototype;
+    return child;
+  };
+  var __indexOf = Array.prototype.indexOf ||
+          function(item) {
+            for (var i = 0, l = this.length; i < l; i++) {
+              if (this[i] === item) return i;
+            }
+            return -1;
+          };
+  (function() {
+    this.isSave = false;
+    return window.onbeforeunload = function() {
+      if (!isSave) {
+        return '确认离开吗?未保存的数据将丢失';
+      }
+    };
+  }).call(this);
 
-<!--</script>-->
-<!--<div class="modal fade" id="publishModal" tabindex="-1" role="dialog" aria-labelledby="publishPage" aria-hidden="true">-->
-  <!--<div class="modal-dialog">-->
-    <!--<div class="modal-content">-->
-      <!--<div class="modal-header">-->
-        <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
-        <!--<h4 class="h3-head" id="publishPage">排期发布</h4>-->
-        <!--<div class="col-xs-3 input-group pull-right searchPanel" style="position: absolute;top:18px;right: 80px;">-->
-          <!--<input type="text" class="form-control" id="schedulesearchInput" placeholder="请输入设备ID或名称" style="width: 150px;"/><span class="input-group-btn"><button type="submit" class="btn btn-default" id="searchBtn">搜索</button></span>-->
-        <!--</div>-->
-      <!--</div>-->
-      <!--<div class="modal-body">-->
-        <!--<div class="panel panel-default">-->
-          <!--<table id="group-list" class="table table-striped" style="table-layout:fixed;word-wrap:break-word;">-->
-            <!--<thead class="thead-color">-->
-            <!--<tr>-->
-              <!--<th>-->
-                <!--<span class="col-xs-1"><input type="checkbox"/></span>-->
-                <!--<div class="col-xs-9">-->
-                  <!--<span> 分组名</span>-->
-                <!--</div>-->
-              <!--</th>-->
-            <!--</tr>-->
-            <!--</thead>-->
-            <!--<tbody>-->
-            <!--</tbody>-->
-          <!--</table>-->
-        <!--</div>-->
-        <!--<div class="panel panel-default">-->
-          <!--<table id="box-list" class="table table-striped" style="table-layout:fixed;word-wrap:break-word;">-->
-            <!--<thead class="thead-color">-->
-            <!--<tr>-->
-              <!--<th class="col-xs-4  curpointer sortByName sortBy">-->
-                <!--<span class="col-xs-1"><input type="checkbox"/></span>-->
-                <!--<div class="col-xs-9">-->
-                  <!--<span class="">-->
-                    <!--设备名<b class="caret " sortcolname="name" style="display:none"></b>-->
-                  <!--</span>-->
-                <!--</div>-->
-              <!--</th>-->
-              <!--<th class="col-xs-3  curpointer sortByAlias sortBy">-->
-                <!--名称<b class="caret" sortcolname="playlist" style="display:none"></b>-->
-              <!--</th>-->
-              <!--<th class="col-xs-3  curpointer sortByIp sortBy">-->
-                <!--地址<b class="caret" sortcolname="playlist" style="display:none"></b>-->
-              <!--</th>-->
-              <!--<th class="col-xs-2  curpointer sortByOnline sortBy">-->
-                <!--在线状态<b class="caret" sortcolname="playlist" style="display:none"></b>-->
-              <!--</th>-->
-            <!--</tr>-->
-            <!--</thead>-->
-            <!--<tbody>-->
-            <!--</tbody>-->
-          <!--</table>-->
-        <!--</div>-->
-        <!--<div class="col-xs-offset-9 diabtnfix ">-->
-          <!--<button type="button" class="btn btn-primary " id="publishBtn">确定</button>-->
-          <!--<button type="button" class="btn btn-default gap" data-dismiss="modal">关闭</button>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
-  <!--</div>-->
-<!--</div>-->
+</script>
 
-<!--警告弹框-->
-
-<!--<div class="modal fade" id="myAlert" role="dialog" aria-hidden="true">-->
-  <!--<div class="modal-dialog">-->
-    <!--<div class="modal-content">-->
-      <!--<div class="modal-header">-->
-        <!--<button class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
-        <!--<h4 class="modal-title" id="myModalLabel" style="color:red;"><strong>警告！</strong></h4>-->
-      <!--</div>-->
-      <!--<div class="modal-body">-->
-
-      <!--</div>-->
-      <!--<div class="modal-footer">-->
-        <!--<button class="btn btn-primary" id="forcePublishBtn">强制发布</button>-->
-        <!--<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>-->
-      <!--</div>-->
-    <!--</div>-->
-  <!--</div>-->
-<!--</div>-->
-
-<!--发布弹框-->
-
-<!--<div class="modal fade" id="confirmPublish" role="dialog" aria-hidden="true">-->
-  <!--<div class="modal-dialog">-->
-    <!--<div class="modal-content">-->
-      <!--<div class="modal-header">-->
-        <!--<button class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
-        <!--<h4 class="modal-title" id="myModalLabel">提示</h4>-->
-      <!--</div>-->
-      <!--<div class="modal-body">-->
-        <!--<p>确认发布吗？</p>-->
-      <!--</div>-->
-      <!--<div class="modal-footer">-->
-        <!--<button class="btn btn-primary" id="publishConfirmBtn">确定</button>-->
-        <!--<button type="button" class="btn btn-default" id="publishCloseBtn">取消</button>-->
-      <!--</div>-->
-    <!--</div>-->
-  <!--</div>-->
-<!--</div>-->
-
-
-
-<div id="contrackEdit" value="{{id}}">
+<div id="contractEdit" value="{{id}}">
   <div class=" well well-sm fix-top-2">
     <div class="container fixed-width">
-      <!--<div class="input-group col-xs-3 ">-->
-        <!--<span class="input-group-addon" style="background-color: transparent;border:0">名称:</span><input type="text" class="form-control" id="name" placeholder="排期名称" style="width:200px;"/>-->
-      <!--</div>-->
       <div class="col-xs-8 ">
-        <button type="button" class="btn btn-default" id="save">
-          <span class="glyphicon glyphicon-folder-close"></span>
-          保存
-        </button>
+        <button type="button" class="btn btn-default" id="save"><span class="glyphicon glyphicon-folder-close"></span>保存</button>
         <button type="button" class="btn btn-default gap" id="returnComfirmBtn" onclick="location.href = '/contract';"> 返回</button>
       </div>
     </div>
@@ -178,11 +68,11 @@
           <label for="saleNoTxt">编号</label>
           <input type="text" class="form-control " id="saleNoTxt" placeholder="请输入编号"/>
         </div>
-        <div class="col-xs-3" id="date" style="">
-          <label for="datePack">日期</label>
+        <div class="col-xs-3" id="saleDateDiv" style="">
+          <label for="saleDate">日期</label>
           <div class="input-group ">
-            <input type="text" class="form-control" placeholder="日期" readonly="readonly" id="datePack" onclick="datePick('#startDate','#endDate',true)" onfocus="$(this).blur()"/>
-            <span class="input-group-addon curpointer" onclick="clearDateTime('#datePack')">
+            <input type="text" class="form-control" placeholder="日期" readonly="readonly" id="saleDate" onclick="datePick('#saleDate','#endDate',true)" onfocus="$(this).blur()"/>
+            <span class="input-group-addon curpointer" onclick="clearDateTime('#saleDate')">
               <span class="glyphicon glyphicon-remove "></span>
             </span>
 
@@ -198,28 +88,38 @@
           <select class="form-control" id="selectCustom">
           </select>
         </div>
-
       </div>
+
       <div class="panel-body">
-        <div class="b" id="timeSetting" style="max-height:750px;overflow-y:auto">
+        <div class="col-xs-3">
+          <label for="selectCurrency">币种</label>
+          <select class="form-control" id="selectCurrency">
+            <option value="CNY">人民币</option>
+            <option value="USD">美元</option>
+          </select>
+        </div>
+        <div class="col-xs-3">
+          <label for="saleAmountTxt">合同金额</label>
+          <input type="number" class="form-control " id="saleAmountTxt" placeholder="请输入金额"/>
+        </div>
+      </div>
+      <div class="panel-body row">
+        <div class="col-xs-12" style="padding-left: 30px;padding-right: 30px;">
+          <label for="paymentTxt">结算方式</label>
+          <textarea class="form-control" style="margin: 0px -238px 0px 0px; width: 940px; height: 54px; max-width: 940px; min-width: 940px" id="paymentTxt" placeholder="请输入结算方式"></textarea>
+        </div>
+      </div>
+      <div class="panel-body row">
+        <div class="col-xs-12 text-right" style="width: 980px;padding-left: 30px;padding-right: 30px;">
+          <button type="button" class="btn btn-primary " id="createProductConfirmBtn" onclick="displayProduct()">增加产品</button>
+        </div>
+      </div>
+
+      <div class="panel-body">
+        <div class="b" id="productSetting" style="max-height:750px;overflow-y:auto">
 
         </div>
-        <div class="row">
-          <div class="input-group col-xs-4 " style="width: 330px;padding-left: 30px;">
-            <span class="input-group-addon spanAlignFiX">合计金额:</span><input type="text" class="form-control" placeholder="合计金额" id="totalPrice"/>
-          </div>
 
-          <div class="col-xs-12 text-right" style="width: 980px;padding-left: 30px;">
-            <button type="button" class="btn btn-primary " id="createProductConfirmBtn" onclick="displaySetting()">增加产品</button>
-          </div>
-
-        </div>
-        <div class="panel-body row">
-          <div class="col-xs-12">
-            <label for="paymentProvisionTxt">付款方式</label>
-            <textarea class="form-control" id="paymentProvisionTxt" placeholder="请输入付款方式"></textarea>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -240,23 +140,61 @@
       </div>
 
     </div>
-  </div>
 
+    <div class="container fix-top-1-tablelist-default fixed-width"style="padding-left: 0px; padding-right: 30px;">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <label>财务情况</label>
+        </div>
+
+        <div class="panel-body">
+          <div class="b" id="invoiceSetting" style="max-height:750px;overflow-y:auto">
+
+          </div>
+          <div class="col-xs-12 text-right" style="">
+            <button type="button" class="btn btn-primary " id="createInvoiceConfirmBtn" onclick="displayInvoice()">增加发票</button>
+          </div>
+
+        </div>
+
+        <div class="panel-body">
+          <div class="col-xs-3">
+            <label for="receivedTxt" style="padding-left: 13px;">已收款金额</label>
+            <input type="number" class="form-control " id="receivedTxt" placeholder="请输入金额"/>
+          </div>
+
+          <div class="col-xs-3">
+            <label for="balanceTxt" style="padding-left: 13px;">余额</label>
+            <input type="number" class="form-control" readOnly="true" id="balanceTxt" placeholder="请输入金额"/>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
 </div>
 
 {% raw %}
 
-<script type="text/template" id="myAlerttemplate" style="display: none">
+<!--<script type="text/template" id="myAlerttemplate" style="display: none">-->
 
-  {{rowBoxes}}
+  <!--{{rowBoxes}}-->
 
-</script>
+<!--</script>-->
 
-<script type="text/template" id="timeSetting-template" style="display: none">
+<script type="text/template" id="productSetting-template" style="display: none">
 
-  <button type="button" class="close removeTimeSetting">&times</button>
+  <button type="button" class="close removeProductSetting">&times</button>
   <div class="panel-body">
-    <div class="col-xs-3">
+    <div class="col-xs-2">
+      <label for="selectCategory" style="padding-left: 13px;">类别</label>
+      <select class="form-control" id="selectCategory" onchange="categoryChange()">
+        {{=categoryOption}}
+      </select>
+    </div>
+    <div class="col-xs-4">
       <label for="selectProduct" style="padding-left: 13px;">品名</label>
       <select class="form-control" id="selectProduct">
       </select>
@@ -267,11 +205,11 @@
     </div>
     <div class="col-xs-2">
       <label for="numberTxt" style="padding-left: 13px;">数量</label>
-      <input type="text" class="form-control " id="numberTxt" placeholder="请输入数量"/>
+      <input type="number" class="form-control " id="numberTxt" placeholder="请输入数量"/>
     </div>
     <div class="col-xs-2">
       <label for="priceTxt" style="padding-left: 13px;">单价</label>
-      <input type="text" class="form-control " id="priceTxt" placeholder="请输入单价"/>
+      <input type="number" class="form-control " id="priceTxt" placeholder="请输入单价"/>
     </div>
 
   </div>
@@ -281,32 +219,109 @@
 
   <button type="button" class="close removeLogisSetting">&times</button>
   <div class="panel-body">
-    <div class="col-xs-3">
-      <label for="selectProductLogis" style="padding-left: 13px;">品名</label>
-      <select class="form-control" id="selectProductLogis">
-      </select>
-    </div>
-    <div class="col-xs-3" id="dateLogis" style="">
-      <label for="datePack" style="padding-left: 13px;">到货日期</label>
+
+    <div class="col-xs-3" id="logisDateDiv" style="">
+      <label for="logisDate" style="padding-left: 13px;">到货日期</label>
       <div class="input-group ">
-        <input type="text" class="form-control" placeholder="到货日期" readonly="readonly" id="dateLogisPack" onclick="datePick('#startDate','#endDate',true)" onfocus="$(this).blur()"/>
-          <span class="input-group-addon curpointer" onclick="clearDateTime('#datePack')">
+        <input type="text" class="form-control" placeholder="到货日期" readonly="readonly" id="logisDate" onclick="datePick('#logisDate','#endDate',true)" onfocus="$(this).blur()"/>
+          <span class="input-group-addon curpointer" onclick="clearDateTime('#logisDate')">
             <span class="glyphicon glyphicon-remove "></span>
           </span>
 
       </div>
     </div>
-    <div class="col-xs-2">
-      <label for="numberTxt" style="padding-left: 13px;">数量</label>
-      <input type="text" class="form-control " id="numberLogisTxt" placeholder="请输入数量"/>
+    <div class="col-xs-4">
+      <label for="selectProductLogis" style="padding-left: 13px;">品名</label>
+      <select class="form-control" id="selectProductLogis">
+      </select>
+    </div>
+    <div class="col-xs-3">
+      <label for="numberLogisTxt" style="padding-left: 13px;">数量</label>
+      <input type="number" class="form-control " id="numberLogisTxt" placeholder="请输入数量"/>
     </div>
     <div class="col-xs-2">
-      <label for="priceTxt" style="padding-left: 13px;">实际单价</label>
-      <input type="text" class="form-control " id="priceLogisTxt" placeholder="请输入实际单价"/>
+      <label for="priceLogisTxt" style="padding-left: 13px;">实际单价</label>
+      <input type="number" class="form-control " id="priceLogisTxt" placeholder="请输入实际单价"/>
     </div>
 
   </div>
 
+  <div class="panel-body">
+    <div class="col-xs-3">
+      <label for="bgPriceTxt" style="padding-left: 13px;">报关单价</label>
+      <input type="number" class="form-control " id="bgPriceTxt" placeholder="请输入报关单价"/>
+    </div>
+    <div class="col-xs-3">
+      <label for="tariffRateTxt" style="padding-left: 13px;">进口关税税率</label>
+      <input type="number" class="form-control " id="tariffRateTxt" placeholder="请输入税率"/>
+    </div>
+    <div class="col-xs-3">
+      <label for="tariffTxt" style="padding-left: 13px;">进口关税（单价）</label>
+      <input type="number" class="form-control " id="tariffTxt" placeholder="请输入关税"/>
+    </div>
+    <div class="col-xs-3">
+      <label for="tariffSumTxt" style="padding-left: 13px;">进口关税小计</label>
+      <input type="number" class="form-control " id="tariffSumTxt" placeholder=""/>
+    </div>
+  </div>
+
+  <div class="panel-body">
+    <div class="col-xs-4">
+      <label for="saleTaxRateTxt" style="padding-left: 13px;">进口消费税税率</label>
+      <input type="number" class="form-control " id="saleTaxRateTxt" placeholder="请输入消费税"/>
+    </div>
+    <div class="col-xs-4">
+      <label for="saleTaxTxt" style="padding-left: 13px;">进口消费税（单价）</label>
+      <input type="number" class="form-control " id="saleTaxTxt" placeholder="请输入消费税"/>
+    </div>
+    <div class="col-xs-4">
+      <label for="saleTaxSumTxt" style="padding-left: 13px;">进口消费税小计</label>
+      <input type="number" class="form-control " id="saleTaxSumTxt" placeholder=""/>
+    </div>
+  </div>
+
+  <div class="panel-body">
+    <div class="col-xs-3">
+      <label for="VATRateTxt" style="padding-left: 13px;">增值税税率</label>
+      <input type="number" class="form-control " id="VATRateTxt" placeholder="请输入增值税"/>
+    </div>
+    <div class="col-xs-3">
+      <label for="VATTxt" style="padding-left: 13px;">增值税（单价）</label>
+      <input type="number" class="form-control " id="VATTxt" placeholder="请输入增值税"/>
+    </div>
+    <div class="col-xs-3">
+      <label for="VATSumTxt" style="padding-left: 13px;">增值税小计</label>
+      <input type="number" class="form-control " id="VATSumTxt" placeholder=""/>
+    </div>
+    <div class="col-xs-3">
+      <label for="costTxt" style="padding-left: 13px;">成本总计</label>
+      <input type="number" class="form-control " id="costTxt" placeholder=""/>
+    </div>
+  </div>
+
+</script>
+
+<script type="text/template" id="invoice-template" style="display: none">
+
+  <button type="button" class="close removeInvoice">&times</button>
+  <div class="panel-body">
+    <div class="col-xs-3" id="invoicingDateDiv" style="">
+      <label for="invoicingDate">开票日期</label>
+      <div class="input-group ">
+        <input type="text" class="form-control" placeholder="开票日期" readonly="readonly" id="invoicingDate" onclick="datePick('#invoicingDate','#endDate',true)" onfocus="$(this).blur()"/>
+            <span class="input-group-addon curpointer" onclick="clearDateTime('#invoicingDate')">
+              <span class="glyphicon glyphicon-remove "></span>
+            </span>
+
+      </div>
+    </div>
+
+    <div class="col-xs-3">
+      <label for="invoiceNoTxt" style="padding-left: 13px;">发票号</label>
+      <input type="text" class="form-control " id="invoiceNoTxt" placeholder="请输入发票号"/>
+    </div>
+
+  </div>
 </script>
 
 {% endraw %}
@@ -317,13 +332,15 @@
 
 <script src="/js/bootstrap-datetimepicker.js"></script>
 <script src="/js/bootstrap-datetimepicker.zh-CN.js"></script>
-<!--<script src="/js/playlist/model/playlist.js"></script>-->
-<!--<script src="/js/schedule/model/schedule.js"></script>-->
-<!--<script src="/js/box/model/box.js"></script>-->
-<!--<script src="/js/box/model/group.js"></script>-->
+<script src="/js/custom/model/custom.js"></script>
+<script src="/js/user/model/user.js"></script>
+<script src="/js/category/model/category.js"></script>
+<script src="/js/product/model/product.js"></script>
 <script src="/js/gbvision.js"></script>
+  <script src="/js/contract/model/datetime.js"></script>
+  <script src="/js/contract/model/contract.js"></script>
 <script src="/js/contract/model/logistics.js"></script>
 <script src="/js/contract/view/edit.js"></script>
-<!--<script src="/js/playlist/edit/model/datetime.js"></script>-->
+
 
 {% endblock lazyscript %}

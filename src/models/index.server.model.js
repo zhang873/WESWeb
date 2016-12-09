@@ -25,4 +25,4 @@ models.product = require(path.join(__dirname, './product.server.model'))
 models.sales = require(path.join(__dirname, './sales.server.model'))
 models.warehouse = require(path.join(__dirname, './warehouse.server.model'))
 models.department = require(path.join(__dirname, './department.server.model'))
-
+models.category = require(path.join(__dirname, './category.server.model'))

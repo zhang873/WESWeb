@@ -1,25 +1,24 @@
 /**
- * Created by xc.zhang on 2016/11/29.
+ * Created by xc.zhang on 2016/12/7.
  */
 
 var _ = require('lodash')
 var async = require('async')
 var mongoose = require('mongoose')
-var Department = mongoose.model('Department')
+var Category = mongoose.model('Category')
 
 exports.index = function(req, res) {
-    return res.render('department', {
-        title: '部门'
+    return res.render('category', {
+        title: '类别'
     });
 };
 
 exports.array = function(req, res) {
 
-    var departments = [];
-
-    Department.find({
+    //var ctegorys = [];
+    Category.find({
         is_delete : 0
-    }).exec(function(err, department) {
+    }).exec(function(err, ctegory) {
 
         if (err) {
             return res.json({
@@ -28,37 +27,18 @@ exports.array = function(req, res) {
             });
         }
 
-        var departments = _.map(department, function(each) {
+        var ctegorys = _.map(ctegory, function(each) {
             return each
         })
-        res.json(departments)
+        res.json(ctegorys)
 
-        //async.each(sales, function(each, callback) {
-        //    contracts.push(each.getAllAttr());
-        //    return callback(null);
-        //}, function(err) {
-        //        if (err) {
-        //            return res.json({
-        //                rtn: -1,
-        //                message: err
-        //            })
-        //        }
-        //        return res.json(contracts);
-        //    }
-        //)
-
-        //return res.json({
-        //    rtn: 0,
-        //    message:'success',
-        //    sales : sales
-        //});
     })
 };
 
 exports.list = function(req, res) {
-    Department.find({
+    Category.find({
         is_delete : 0
-    }).exec(function(err, department) {
+    }).exec(function(err, ctegory) {
 
         if (err) {
             return res.json({
@@ -70,24 +50,16 @@ exports.list = function(req, res) {
         return res.json({
             rtn: 0,
             message:'success',
-            department : department
+            ctegory : ctegory
         });
     })
 };
 
 exports.add = function(req, res) {
-
-    if (!req.body.name || !req.body.description) {
-        return res.json({
-            rtn: -4,
-            message:'信息不全'
-        });
-    }
-
-    Department.findOne({
+    Category.findOne({
         name:req.body.name,
         is_delete : 0
-    }).exec(function(err, department) {
+    }).exec(function(err, ctegory) {
         if (err) {
             return res.json({
                 rtn: -1,
@@ -95,7 +67,7 @@ exports.add = function(req, res) {
             });
         }
 
-        if (department) {
+        if (ctegory) {
             return res.json({
                 rtn: -2,
                 message:'已存在'
@@ -108,7 +80,7 @@ exports.add = function(req, res) {
         info.is_delete = 0;
         info.create_at = '';
         info.update_at = '';
-        Department.create(info, function(err, d) {
+        Category.create(info, function(err, c) {
             if (err) {
                 return res.json({
                     rtn: -3,
@@ -127,7 +99,7 @@ exports.add = function(req, res) {
 exports.modify = function(req, res) {
 
     console.log(req.body);
-    Department.update({_id:req.body._id},{$set:req.body},function(err){
+    Category.update({_id:req.body._id},{$set:req.body},function(err){
         if(err){
             console.log(err);
             return res.json({
@@ -144,7 +116,7 @@ exports.modify = function(req, res) {
 
 exports.delete = function(req, res) {
     async.each(req.body, function(Id, callback){
-        Department.update({_id:Id},{$set:{is_delete:1}},function(err){
+        Category.update({_id:Id},{$set:{is_delete:1}},function(err){
             if(err){
                 console.log(err);
                 return callback(err)
@@ -153,13 +125,13 @@ exports.delete = function(req, res) {
         callback(null)
     }, function(err){
         if (err) {
-            logger.info('用户: ' + req.cookies.name + ' 删除多条播放列表 ' + req.body + '失败');
+            logger.info('用户: ' + req.cookies.name + ' 删除多条类别 ' + req.body + '失败');
             return res.json({
                 rtn: -1,
                 message:'fail'
             });
         } else {
-            logger.info('用户: ' + req.cookies.name + ' 删除多条播放列表 ' + req.body + '成功');
+            logger.info('用户: ' + req.cookies.name + ' 删除多条类别 ' + req.body + '成功');
             return res.json({
                 rtn: 0,
                 message:'success'
