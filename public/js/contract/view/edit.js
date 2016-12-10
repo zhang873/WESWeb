@@ -98,7 +98,11 @@ ContractView = Backbone.View.extend({
     },
 
     save:function(e,next) {
-
+        var weekdays =$("#productSetting").children('div');
+        $.each(weekdays,function(i,o) {
+            console.log(i);
+            console.log(o);
+        });
     },
 
 
@@ -123,67 +127,92 @@ var productSettings = new ProductSettings;
 ProductSettingItemView = Backbone.View.extend({
     tagName:'div',
     template: _.template($('#productSetting-template').html()),
+    //option : '',
     events:{
-        'click .removeProductSetting': 'removeProductSetting'
-
+        'click .removeProductSetting': 'removeProductSetting',
+        'change .selectCategory' : 'onChange'
     },
     initialize:function() {
-        //var categoryChildren = $('#productSetting-template').find('selectCategory');
-        //var categoryChildren = this.$('#selectCategory');
-        //console.log(categoryChildren);
-        //categorys.fetch().done(function(models,status,jqXHR) {
-        //    var tmpCategorys = categorys.filter(function() {
-        //        return true;
-        //    });
-        //    console.log(tmpCategorys);
-        //    tmpCategorys.reverse();
-        //    $.each(tmpCategorys,function(i,o){
-        //        categoryChildren.append('<option value=' + o.get('_id')  + '>' + o.get('name') + '</option>');
-        //    });
-        //});
+        //this.listenTo($('#selectCategory'), 'change', this.onChange);
     },
-    render:function() {
-        //var data = this.model.toJSON();
-        //var btnCLass =[];
-        //for(var i =1; i < 8;i++) {
-        //    if(data.week[i] === '0') {
-        //        btnCLass[i] = "btn-default";
-        //    } else {
-        //        btnCLass[i] = "btn-primary";
-        //    }
-        //}
-        //this.$el.addClass('alert alert-info')
-        //this.$el.html(this.template({id: data.id , from: data.from, to: data.to,
-        //    btnClass1:btnCLass[1], btnClass2:btnCLass[2], btnClass3:btnCLass[3],
-        //    btnClass4:btnCLass[4], btnClass5:btnCLass[5],btnClass6:btnCLass[6],
-        //    btnClass7:btnCLass[7],
-        //    categoryOption: '1111111111'}));
-        //return this;
-
-        //var temp = _.template($('#productSetting-template').html(), {categoryOption: '<option value="CNY">人民币</option>'});
-        //console.log(temp);
-        this.$el.html(this.template({categoryOption: '111'}));
+    render:function(optCategory, optProduct) {
+        this.$el.html(this.template({categoryOption: optCategory, productOption: optProduct}));
         return this;
     },
 
     removeProductSetting:function() {
         productSettings.remove(this.model);
         $(this.el).remove();
+    },
+
+    onChange: function () {
+        var that = this;
+        var category_id = $('#selectCategory').val();
+        $('#productSetting').empty();
+        products.fetch().done(function (models, status, jqXHR) {
+            var tmpProducts = products.filter(function (p) {
+                if (p.get('category') == category_id) {
+                    return true;
+                }else {
+                    return false;
+                }
+            });
+
+            tmpProducts.reverse();
+            var optionProduct = '';
+            $.each(tmpProducts, function (i, o) {
+                optionProduct += '<option value=' + o.get('_id') + '>' + o.get('name') + '</option>';
+            });
+            $('#productSetting').append(that.render('', optionProduct).el);
+            //this.find('selectProduct').append(optionProduct);
+        });
     }
 });
 
 function displayProduct() {
-    var productSetting = new ProductSetting();
-    productSetting.set({id:productSetting.cid});
-    productSettings.add(productSetting);
-    var productSettingItemView = new ProductSettingItemView({model:productSetting});
-    $('#productSetting').append(productSettingItemView.render().el);
 
+    var optionCategory, optionProduct;
+    categorys.fetch().done(function (models, status, jqXHR) {
+        var tmpCategorys = categorys.filter(function () {
+            return true;
+        });
 
+        tmpCategorys.reverse();
+        $.each(tmpCategorys, function (i, o) {
+            optionCategory += '<option value=' + o.get('_id') + '>' + o.get('name') + '</option>';
+        });
+
+        products.fetch().done(function (models, status, jqXHR) {
+            var tmpProducts = products.filter(function (p) {
+                if ((tmpCategorys) && (tmpCategorys[0]) && (p.get('category') == tmpCategorys[0].get('_id'))) {
+                    return true;
+                }else {
+                    return false;
+                }
+            });
+
+            tmpProducts.reverse();
+            $.each(tmpProducts, function (i, o) {
+                optionProduct += '<option value=' + o.get('_id') + '>' + o.get('name') + '</option>';
+            });
+
+            var productSetting = new ProductSetting();
+            console.log(productSetting.cid);
+            productSetting.set({id: productSetting.cid});
+            productSettings.add(productSetting);
+            var productSettingItemView = new ProductSettingItemView({model: productSetting});
+            $('#productSetting').append(productSettingItemView.render(optionCategory, optionProduct).el);
+        });
+
+    });
 }
 
-function categoryChange() {
 
+function categoryChange(selectProduct) {
+    console.log('#################### categoryChange');
+    console.log($('#selectCategory').val());
+    console.log($('#selectProduct').val());
+    console.log(selectProduct);
 }
 
 

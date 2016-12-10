@@ -11,43 +11,43 @@
 
 {% block main %}
 
-<script>
-  var __slice = Array.prototype.slice;
-  var __hasProp = Object.prototype.hasOwnProperty;
-  var __bind = function(fn, me) {
-    return function() {
-      return fn.apply(me, arguments);
-    };
-  };
-  var __extends = function(child, parent) {
-    for (var key in parent) {
-      if (__hasProp.call(parent, key)) child[key] = parent[key];
-    }
-    function ctor() {
-      this.constructor = child;
-    }
-    ctor.prototype = parent.prototype;
-    child.prototype = new ctor;
-    child.__super__ = parent.prototype;
-    return child;
-  };
-  var __indexOf = Array.prototype.indexOf ||
-          function(item) {
-            for (var i = 0, l = this.length; i < l; i++) {
-              if (this[i] === item) return i;
-            }
-            return -1;
-          };
-  (function() {
-    this.isSave = false;
-    return window.onbeforeunload = function() {
-      if (!isSave) {
-        return '确认离开吗?未保存的数据将丢失';
-      }
-    };
-  }).call(this);
+<!--<script>-->
+  <!--var __slice = Array.prototype.slice;-->
+  <!--var __hasProp = Object.prototype.hasOwnProperty;-->
+  <!--var __bind = function(fn, me) {-->
+    <!--return function() {-->
+      <!--return fn.apply(me, arguments);-->
+    <!--};-->
+  <!--};-->
+  <!--var __extends = function(child, parent) {-->
+    <!--for (var key in parent) {-->
+      <!--if (__hasProp.call(parent, key)) child[key] = parent[key];-->
+    <!--}-->
+    <!--function ctor() {-->
+      <!--this.constructor = child;-->
+    <!--}-->
+    <!--ctor.prototype = parent.prototype;-->
+    <!--child.prototype = new ctor;-->
+    <!--child.__super__ = parent.prototype;-->
+    <!--return child;-->
+  <!--};-->
+  <!--var __indexOf = Array.prototype.indexOf ||-->
+          <!--function(item) {-->
+            <!--for (var i = 0, l = this.length; i < l; i++) {-->
+              <!--if (this[i] === item) return i;-->
+            <!--}-->
+            <!--return -1;-->
+          <!--};-->
+  <!--(function() {-->
+    <!--this.isSave = false;-->
+    <!--return window.onbeforeunload = function() {-->
+      <!--if (!isSave) {-->
+        <!--return '确认离开吗?未保存的数据将丢失';-->
+      <!--}-->
+    <!--};-->
+  <!--}).call(this);-->
 
-</script>
+<!--</script>-->
 
 <div id="contractEdit" value="{{id}}">
   <div class=" well well-sm fix-top-2">
@@ -185,18 +185,19 @@
 <!--</script>-->
 
 <script type="text/template" id="productSetting-template" style="display: none">
-
   <button type="button" class="close removeProductSetting">&times</button>
   <div class="panel-body">
     <div class="col-xs-2">
       <label for="selectCategory" style="padding-left: 13px;">类别</label>
-      <select class="form-control" id="selectCategory" onchange="categoryChange()">
-        {{=categoryOption}}
+      <!--<select class="form-control" id="selectCategory" onchange="categoryChange($('selectProduct'))">-->
+      <select class="form-control selectCategory" id="selectCategory">
+        <%= categoryOption %>
       </select>
     </div>
     <div class="col-xs-4">
       <label for="selectProduct" style="padding-left: 13px;">品名</label>
       <select class="form-control" id="selectProduct">
+        <%= productOption %>
       </select>
     </div>
     <div class="col-xs-2">
@@ -211,8 +212,8 @@
       <label for="priceTxt" style="padding-left: 13px;">单价</label>
       <input type="number" class="form-control " id="priceTxt" placeholder="请输入单价"/>
     </div>
-
   </div>
+
 </script>
 
 <script type="text/template" id="logisSetting-template" style="display: none">
