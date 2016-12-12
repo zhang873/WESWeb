@@ -42,12 +42,12 @@
   (function() {}).call(this);
 
 </script>
-<div class="modal fade" id="deletePlaylistAlert" tabindex="-1" role="dialog" aria-labelledby="createFolderLabel" aria-hidden="true">
+<div class="modal fade" id="deleteContractAlert" tabindex="-1" role="dialog" aria-labelledby="createContractLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="createFolderLabel">警告</h4>
+        <h4 class="modal-title" id="createContractLabel">警告</h4>
       </div>
       <div class="modal-body">
         <h4 class="col-xs-offset-1">请先选择您要删除的播放列表</h4>
@@ -61,9 +61,9 @@
 
 <div class="well well-sm fix-top-2">
   <div class="container fixed-width">
-    <button type="button" class="btn btn-default" id="createBtn" onclick="window.location.href='/contract/create'"><span class="glyphicon glyphicon-new-window"></span> 新建</button><button type="button" class="btn btn-default gap" id="deleteBtn" onclick="delPlaylists()"><span class="glyphicon glyphicon-trash"></span> 删除</button>
+    <button type="button" class="btn btn-default" id="createBtn" onclick="window.location.href='/contract/create'"><span class="glyphicon glyphicon-new-window"></span> 新建</button><button type="button" class="btn btn-default gap" id="deleteBtn" onclick="delContracts()"><span class="glyphicon glyphicon-trash"></span> 删除</button>
     <div class="col-xs-3 input-group pull-right searchPanel">
-      <input type="text" class="form-control" id="searchInput" placeholder="请输入播放列表名称" oninput="searchPlaylists()"/><span class="input-group-btn"><button type="submit" class="btn btn-default" id="searchBtn" onclick="searchPlaylists()">搜索</button></span>
+      <input type="text" class="form-control" id="searchInput" placeholder="请输入合同编号" oninput="searchContracts()"/><span class="input-group-btn"><button type="submit" class="btn btn-default" id="searchBtn" onclick="searchContracts()">搜索</button></span>
     </div>
   </div>
 </div>
@@ -71,23 +71,29 @@
 <div class="container fix-top-2-tablelist-default fixed-width">
   <h3 class="pageInfo"><img src="images/header.png" class="circlePic"/>&nbsp合同列表</h3>
   <div class="panel panel-default">
-    <table class="table table-striped" style="table-layout:fixed;word-wrap:break-word;" id="mediaArea">
+    <table class="table table-striped" style="table-layout:fixed;word-wrap:break-word;" id="contractArea">
       <thead class="thead-color">
       <tr>
         <th class="col-xs-4 curpointer sortByName sortBy">
           <span class="col-xs-1 "><input type="checkbox" id="chkAllItem"/></span>
-          <div class="col-xs-10 " style="padding-left:0">
-            <span class=" col-xs-10"> 日期<b class="caret " sortcolname="name" style="display:none"></b></span>
+          <div class="col-xs-4 " style="padding-left:0">
+            <span class=""> 合同编号<b class="caret " sortcolname="name" style="display:none"></b></span>
           </div>
         </th>
-        <th class="col-xs-1 curpointer sortByUser sortBy text-center">
-          合同编号<b class="caret" sortcolname="size" style="display:none"></b>
+        <th class="col-xs-2 curpointer sortByUser sortBy text-center">
+          日期<b class="caret" sortcolname="date" style="display:none"></b>
         </th>
         <th class="col-xs-2 curpointer sortByUser sortBy text-center">
-          销售助理<b class="caret" sortcolname="username" style="display:none"></b>
+          销售助理<b class="caret" sortcolname="user" style="display:none"></b>
         </th>
-        <th class="col-xs-1 curpointer sortByStamp sortBy text-center">
-          合同状态<b class="caret" sortcolname="stamp" style="display:none"></b>
+        <th class="col-xs-2 curpointer sortByUser sortBy text-center">
+          客户<b class="caret" sortcolname="custom" style="display:none"></b>
+        </th>
+        <th class="col-xs-2 curpointer sortByStamp sortBy text-center">
+          合同金额<b class="caret" sortcolname="total" style="display:none"></b>
+        </th>
+        <th class="col-xs-2 curpointer sortByStamp sortBy text-center">
+          合同状态<b class="caret" sortcolname="status" style="display:none"></b>
         </th>
       </tr>
       </thead>
@@ -100,25 +106,31 @@
 {% raw %}
 
 
-<script type="text/template" id="tmplPlaylist">
+<script type="text/template" id="tmplContract">
 
   <td>
-    <span class="col-xs-1 "><input type="checkbox" value="{{id}}" class="chkMediaItem"/></span>
+    <span class="col-xs-1 "><input type="checkbox" value="{{id}}" class="chkContractItem"/></span>
     <div class="col-xs-10 ">
-      <span class="col-xs-9 playlistName displayName" title="{{date}}">{{date}}</span>
+      <a href="/contract/edit?id={{id}}" class=" gap" title="编辑"><span  title="{{contract_no}}">{{contract_no}}</span></a>
     </div>
-    <div class="col-xs-4 playlistOper " style="display:none;text-align: right;">
-      <a href="/contract/edit?id={{id}}" class=" gap" title="编辑"><span>编辑</span></a><a href="javascript:void(0)" class="tdRemoveItem gap" title="删除"><span>删除</span></a>
-    </div>
+    <!--<div class="col-xs-4 contractOper " style="display:none;text-align: right;">-->
+      <!--<a href="/contract/edit?id={{id}}" class=" gap" title="编辑"><span>编辑</span></a>-->
+    <!--</div>-->
   </td>
   <td class="text-center">
-    {{contract_no}}
+    {{date}}
+  </td>
+  <td class="text-center">
+    {{seller}}
   </td>
   <td class="text-center">
     {{custom}}
   </td>
   <td class="text-center">
     {{total}}
+  </td>
+  <td class="text-center">
+    {{status}}
   </td>
 
 </script>
@@ -129,8 +141,9 @@
 
 {% block lazyscript %}
 
+<script src="/js/user/model/user.js"></script>
+<script src="/js/custom/model/custom.js"></script>
 <script src="/js/contract/model/contract.js"></script>
 <script src="/js/contract/view/contract.js"></script>
-<!--<script src="/js/user/model/user.js"></script>-->
 
 {% endblock lazyscript %}

@@ -110,8 +110,9 @@
         </div>
       </div>
       <div class="panel-body row">
-        <div class="col-xs-12 text-right" style="width: 980px;padding-left: 30px;padding-right: 30px;">
-          <button type="button" class="btn btn-primary " id="createProductConfirmBtn" onclick="displayProduct()">增加产品</button>
+        <div class="col-xs-12 text-right" style="width: 980px;padding-left: 30px;padding-right: 15px;">
+          <button type="button" class="btn btn-primary " id="saveSalesBtn">保存合同</button>
+          <button type="button" class="btn btn-primary " id="createProductConfirmBtn" onclick="displayProduct('','')">增加产品</button>
         </div>
       </div>
 
@@ -190,27 +191,31 @@
     <div class="col-xs-2">
       <label for="selectCategory" style="padding-left: 13px;">类别</label>
       <!--<select class="form-control" id="selectCategory" onchange="categoryChange($('selectProduct'))">-->
-      <select class="form-control selectCategory" id="selectCategory">
+      <select class="form-control selectCategory" id="selectCategory"">
         <%= categoryOption %>
       </select>
     </div>
-    <div class="col-xs-4">
+    <div class="col-xs-3">
       <label for="selectProduct" style="padding-left: 13px;">品名</label>
-      <select class="form-control" id="selectProduct">
+      <select class="form-control selectProduct" id="selectProduct">
         <%= productOption %>
       </select>
     </div>
-    <div class="col-xs-2">
+    <div class="col-xs-2" style="width: 100px;">
       <label for="unitTxt" style="padding-left: 13px;">单位</label>
-      <input type="text" class="form-control " id="unitTxt" placeholder="请输入单位"/>
+      <input type="text" class="form-control " id="unitTxt" placeholder="单位"/>
     </div>
-    <div class="col-xs-2">
+    <div class="col-xs-2" style="width: 130px;">
       <label for="numberTxt" style="padding-left: 13px;">数量</label>
-      <input type="number" class="form-control " id="numberTxt" placeholder="请输入数量"/>
+      <input type="number" class="form-control numberTxt" id="numberTxt" placeholder="数量"/>
+    </div>
+    <div class="col-xs-2" style="width: 130px;">
+      <label for="priceTxt" style="padding-left: 13px;">单价</label>
+      <input type="number" class="form-control priceTxt" id="priceTxt" placeholder="单价"/>
     </div>
     <div class="col-xs-2">
-      <label for="priceTxt" style="padding-left: 13px;">单价</label>
-      <input type="number" class="form-control " id="priceTxt" placeholder="请输入单价"/>
+      <label for="priceTxt" style="padding-left: 13px;">小计</label>
+      <input type="number" class="form-control sumTxt" id="sumTxt" placeholder=""/>
     </div>
   </div>
 
@@ -231,72 +236,77 @@
 
       </div>
     </div>
-    <div class="col-xs-4">
+    <div class="col-xs-3">
       <label for="selectProductLogis" style="padding-left: 13px;">品名</label>
       <select class="form-control" id="selectProductLogis">
+        <%= productOption %>
       </select>
     </div>
     <div class="col-xs-3">
-      <label for="numberLogisTxt" style="padding-left: 13px;">数量</label>
-      <input type="number" class="form-control " id="numberLogisTxt" placeholder="请输入数量"/>
+      <label for="numberLogisTxt" style="padding-left: 13px;">数量(N)</label>
+      <input type="number" class="form-control numberLogisTxt" id="numberLogisTxt" value=0 placeholder="请输入数量"/>
     </div>
-    <div class="col-xs-2">
-      <label for="priceLogisTxt" style="padding-left: 13px;">实际单价</label>
-      <input type="number" class="form-control " id="priceLogisTxt" placeholder="请输入实际单价"/>
+    <div class="col-xs-3">
+      <label for="priceLogisTxt" style="padding-left: 13px;">实际单价(RP)</label>
+      <input type="number" class="form-control priceLogisTxt" id="priceLogisTxt" value=0 placeholder="请输入实际单价"/>
     </div>
 
   </div>
 
   <div class="panel-body">
     <div class="col-xs-3">
-      <label for="bgPriceTxt" style="padding-left: 13px;">报关单价</label>
-      <input type="number" class="form-control " id="bgPriceTxt" placeholder="请输入报关单价"/>
+      <label for="saleTaxRateTxt" style="padding-left: 13px;">进口消费税税率</label>
+      <input type="text" class="form-control " id="saleTaxRateTxt" value=0 placeholder="请输入消费税"/>
     </div>
+    <div class="col-xs-3">
+      <label for="saleTaxTxt" style="padding-left: 13px;">进口消费税（单价）(ST)</label>
+      <input type="number" class="form-control saleTaxTxt" id="saleTaxTxt" value=0 placeholder="请输入消费税"/>
+    </div>
+    <div class="col-xs-3">
+      <label for="saleTaxSumTxt" style="padding-left: 13px;">进口消费税小计(STS=ST*N)</label>
+      <input type="number" class="form-control saleTaxSumTxt" id="saleTaxSumTxt" value=0 placeholder=""/>
+    </div>
+    <div class="col-xs-3">
+      <label for="costLogisTxt" style="padding-left: 13px;">货物成本(CL=RP*N)</label>
+      <input type="number" class="form-control costLogisTxt" id="costLogisTxt" value=0 placeholder=""/>
+    </div>
+  </div>
+
+  <div class="panel-body">
     <div class="col-xs-3">
       <label for="tariffRateTxt" style="padding-left: 13px;">进口关税税率</label>
-      <input type="number" class="form-control " id="tariffRateTxt" placeholder="请输入税率"/>
+      <input type="text" class="form-control " id="tariffRateTxt" value=0 placeholder="请输入税率"/>
     </div>
     <div class="col-xs-3">
-      <label for="tariffTxt" style="padding-left: 13px;">进口关税（单价）</label>
-      <input type="number" class="form-control " id="tariffTxt" placeholder="请输入关税"/>
+      <label for="tariffTxt" style="padding-left: 13px;">进口关税（单价）(T)</label>
+      <input type="number" class="form-control tariffTxt" id="tariffTxt" value=0 placeholder="请输入关税"/>
     </div>
     <div class="col-xs-3">
-      <label for="tariffSumTxt" style="padding-left: 13px;">进口关税小计</label>
-      <input type="number" class="form-control " id="tariffSumTxt" placeholder=""/>
+      <label for="tariffSumTxt" style="padding-left: 13px;">进口关税小计(TS=T*N)</label>
+      <input type="number" class="form-control tariffSumTxt" id="tariffSumTxt" value=0 placeholder=""/>
     </div>
-  </div>
-
-  <div class="panel-body">
-    <div class="col-xs-4">
-      <label for="saleTaxRateTxt" style="padding-left: 13px;">进口消费税税率</label>
-      <input type="number" class="form-control " id="saleTaxRateTxt" placeholder="请输入消费税"/>
-    </div>
-    <div class="col-xs-4">
-      <label for="saleTaxTxt" style="padding-left: 13px;">进口消费税（单价）</label>
-      <input type="number" class="form-control " id="saleTaxTxt" placeholder="请输入消费税"/>
-    </div>
-    <div class="col-xs-4">
-      <label for="saleTaxSumTxt" style="padding-left: 13px;">进口消费税小计</label>
-      <input type="number" class="form-control " id="saleTaxSumTxt" placeholder=""/>
+    <div class="col-xs-3">
+      <label for="bgPriceTxt" style="padding-left: 13px;">报关单价</label>
+      <input type="number" class="form-control " id="bgPriceTxt" value=0 placeholder="请输入报关单价"/>
     </div>
   </div>
 
   <div class="panel-body">
     <div class="col-xs-3">
       <label for="VATRateTxt" style="padding-left: 13px;">增值税税率</label>
-      <input type="number" class="form-control " id="VATRateTxt" placeholder="请输入增值税"/>
+      <input type="text" class="form-control " id="VATRateTxt" value=0 placeholder="请输入增值税"/>
     </div>
     <div class="col-xs-3">
-      <label for="VATTxt" style="padding-left: 13px;">增值税（单价）</label>
-      <input type="number" class="form-control " id="VATTxt" placeholder="请输入增值税"/>
+      <label for="VATTxt" style="padding-left: 13px;">增值税（单价）(V)</label>
+      <input type="number" class="form-control VATTxt" id="VATTxt" value=0 placeholder="请输入增值税"/>
     </div>
     <div class="col-xs-3">
-      <label for="VATSumTxt" style="padding-left: 13px;">增值税小计</label>
-      <input type="number" class="form-control " id="VATSumTxt" placeholder=""/>
+      <label for="VATSumTxt" style="padding-left: 13px;">增值税小计(VS=V*N)</label>
+      <input type="number" class="form-control VATSumTxt" id="VATSumTxt" value=0 placeholder=""/>
     </div>
     <div class="col-xs-3">
-      <label for="costTxt" style="padding-left: 13px;">成本总计</label>
-      <input type="number" class="form-control " id="costTxt" placeholder=""/>
+      <label for="costTxt" style="padding-left: 13px;">总成本(C=CL+STS+TS+VS)</label>
+      <input type="number" class="form-control " id="costTxt" value=0 placeholder=""/>
     </div>
   </div>
 
@@ -338,9 +348,11 @@
 <script src="/js/category/model/category.js"></script>
 <script src="/js/product/model/product.js"></script>
 <script src="/js/gbvision.js"></script>
-  <script src="/js/contract/model/datetime.js"></script>
-  <script src="/js/contract/model/contract.js"></script>
+<script src="/js/contract/model/datetime.js"></script>
+<script src="/js/contract/model/contract.js"></script>
 <script src="/js/contract/model/logistics.js"></script>
+<script src="/js/contract/model/product.js"></script>
+<script src="/js/contract/model/invoice.js"></script>
 <script src="/js/contract/view/edit.js"></script>
 
 

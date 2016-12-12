@@ -6,12 +6,12 @@ var Contract = Backbone.Model.extend({
         contract_no:'',
         date:'',
         custom:'',
-        total: ''
+        seller:'',
+        currency:'',
+        total: '',
+        payment_provision : '',
+        status: ''
     },
-    //copy: function() {
-    //    var that = this;
-    //    return  $.post('/contract/copy/'+that.get('id'),{})
-    //}
 });
 /*model end*/
 

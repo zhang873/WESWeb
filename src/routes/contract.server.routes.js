@@ -16,7 +16,16 @@ app.route('/contract/create')
 app.route('/contract/edit')
     .get(user.requiresLogin, contract.showEdit);
 
+app.route('/contract/:contractid')
+    .get(user.requiresLogin, contract.getContract);
+
 app.route('/wes/contracts')
+    .get(user.requiresLogin, contract.array)
+
+app.route('/wes/contract')
     .get(user.requiresLogin, contract.list)
+    .post(user.requiresLogin, contract.add)
+    .delete(user.requiresLogin, contract.delete)
+    .put(user.requiresLogin, contract.modify)
 
 module.exports = app

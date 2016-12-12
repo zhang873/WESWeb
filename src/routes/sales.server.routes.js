@@ -9,6 +9,7 @@ var app = express.Router()
 app.route('/wes/sales')
     .get(sales.list)
     .post(sales.add)
+    .put(sales.modify)
     .delete(sales.delete)
 
 app.route('/sales')

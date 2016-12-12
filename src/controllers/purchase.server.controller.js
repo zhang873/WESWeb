@@ -49,14 +49,7 @@ exports.add = function(req, res) {
     //        });
     //    }
 
-    var info = {};
-    info.contract_no = req.body.contract_no;
-    info.date = req.body.date;
-    info.user = req.body.user;
-    info.supplier = req.body.supplier;
-    info.product = req.body.product;
-    info.marks = req.body.marks;
-    Purchase.create(info, function(err) {
+    Purchase.create(req.body, function(err) {
         if (err) {
             return res.json({
                 rtn: -3,

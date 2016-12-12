@@ -51,15 +51,15 @@ exports.add = function(req, res) {
             });
         }
 
-        var info = {};
-        info.contract_no = req.body.contract_no;
-        info.date = req.body.date;
-        info.seller = req.body.seller;
-        info.custom = req.body.custom;
-        info.product = req.body.product;
-        info.payment_provision = req.body.payment_provision;
-        info.marks = req.body.marks;
-        Sales.create(info, function(err) {
+        //var info = {};
+        //info.contract_no = req.body.contract_no;
+        //info.date = req.body.date;
+        //info.seller = req.body.seller;
+        //info.custom = req.body.custom;
+        //info.product = req.body.product;
+        //info.payment_provision = req.body.payment_provision;
+        //info.marks = req.body.marks;
+        Sales.create(req.body, function(err) {
             if (err) {
                 return res.json({
                     rtn: -3,
@@ -73,6 +73,20 @@ exports.add = function(req, res) {
             });
         });
     })
+};
+
+exports.modify = function(req, res) {
+
+    Sales.update({_id:req.body._id},{$set:req.body},function(err){
+        if(err){
+            console.log(err);
+        }
+        return res.json({
+            rtn: 0,
+            message:'success'
+        });
+    })
+
 };
 
 exports.delete = function(req, res) {

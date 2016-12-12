@@ -2,69 +2,46 @@ _.templateSettings = {
     interpolate : /\{\{(.+?)\}\}/g
 };
 
+var users = new Users;
+var customs = new Customs;
 
-//var users = new Users;
+users.fetch();
+customs.fetch();
 
+function getUserName(id){
+    var usersModels = users.models;
+    var $name = '';
+    for(var i = 0; i<usersModels.length;i++){
+        if(id == usersModels[i].attributes._id){
+            $name = usersModels[i].attributes.name;
+            return $name;
+        }
+    }
+}
 
-//PlaylistUnionUser = Backbone.Model.extend({
-//    initialize: function() {
-//    },
-//    defaults: {
-//        playlistId: '',
-//        departId:''
-//    }
-//});
-//PlaylistUnionUsers = Backbone.Collection.extend({
-//    url:'/playlistunionuser',
-//    model: PlaylistUnionUser
-//});
-//var playlistunionusers = new PlaylistUnionUsers;
-//playlistunionusers.fetch();
-//users.fetch();
-
-//function getUsername(playlistid){
-//    var puuModels=playlistunionusers.models;
-//    var userModels = users.models;
-//    var departid='';
-//    var $username='';
-//    for(var i = 0; i<puuModels.length;i++){
-//        if(playlistid==puuModels[i].attributes.playlistId){
-//            departid = puuModels[i].attributes.departId;
-//            break;
-//        }
-//    }
-//    for(var j=0;j<userModels.length;j++){
-//        if(departid==userModels[j].attributes.departId){
-//            $username=userModels[j].attributes.name;
-//            return $username;
-//        }
-//    }
-//    return $username;
-//}
-//
-//function getSize(data){
-//    if(data){
-//        var datasize = parseInt(data);
-//        var sizenum = filesize(datasize, {base: 2}).toUpperCase();
-//        return sizenum;
-//    }else{
-//        return "0B";
-//    }
-//
-//}
+function getCustomName(id){
+    var customsModels = customs.models;
+    var $name = '';
+    for(var i = 0; i<customsModels.length;i++){
+        if(id == customsModels[i].attributes._id){
+            $name = customsModels[i].attributes.name;
+            return $name;
+        }
+    }
+}
 
 /*view start*/
-var PlaylistItemView = Backbone.View.extend({
+var ContractItemView = Backbone.View.extend({
     tagName:'tr',
     events:{
 
-        'mouseover': 'showOper',
-        'mouseout': 'hideOper',
+        //'mouseover': 'showOper',
+        //'mouseout': 'hideOper',
 
         'click .tdRemoveItem ':'clear',
 
-        'click .tdCopyItem ':'copy',
-        'click .chkMediaItem': 'selectMediaItem'
+        //'click .tdCopyItem ':'copy',
+        'click .chkContractItem': 'selectContractItem'
 
     },
     initialize: function() {
@@ -73,61 +50,73 @@ var PlaylistItemView = Backbone.View.extend({
     },
     render: function() {
         var data = this.model.toJSON();
-        //var data = this.model.attributes.sales;
         console.log(this.model)
         data.id = data._id;
         data.date = data.date;
         data.contract_no = data.contract_no;
-        data.custom = data.custom;
-        data.total = data.total;
-        //data.stamp = new moment(parseInt(data.stamp)).lang('zh-cn').from();
-        //data.userName = getUsername(data.id);
-        //if(!data.userName) data.userName='admin';
-        //data.size = getSize(data.size);
-        $(this.el).html( _.template($('#tmplPlaylist').html(), data));
+        data.custom = getCustomName(data.custom);
+        data.seller = getUserName(data.seller);
+
+        if (data.total == '') {
+            data.total = '0';
+        }
+
+        if (data.currency == 'USD') {
+            data.total = '$' + data.total;
+        }else {
+            data.total = '￥' + data.total;
+        }
+        switch (data.status){
+            case 0:
+                data.status = '发货中';
+                break;
+            case 1:
+                data.status = '收款中';
+                break;
+            case 2:
+                data.status = '已结束';
+                break;
+        }
+        $(this.el).html( _.template($('#tmplContract').html(), data));
 
         return this.el;
     },
     clear: function() {
+
         if(confirm("确认删除吗？")) {
+            var data = this.model.toJSON();
             this.model.destroy();
+            console.log(data);
+            var $ids = [];
+            $ids.push(data._id);
+            $.ajax({
+                type:'DELETE',
+                url: '/wes/contract',
+                contentType: 'application/json',
+                data: JSON.stringify($ids),
+            }).done(function(res){
+                console.log(res);
+            });
         }
     },
-    //copy: function() {
-    //    var id = this.model.get('id');
-    //    $.post('/contract/copy/' + id, {stamp:Date.now()})
-    //        .done(function(data) {
-    //            var duplicate = new Playlist(data);
-    //            playlists.add(duplicate);
-    //            var itemView = new PlaylistItemView({model:duplicate});
-    //            $('#mediaArea tbody').prepend(itemView.render());
-    //        })
-    //        .fail(function(jqXHR) {
-    //            if(jqXHR.status === 404) {
-    //                alert('提交有误，找不到对应的排期');
-    //            } else {
-    //                alert('未知错误，请联系管理员');
-    //            }
-    //        });
-    //},
-    selectMediaItem : function() {
-        if($('.chkMediaItem:checked').length == $('.chkMediaItem').length) $('#chkAllItem').prop('checked', true);
+    selectContractItem : function() {
+        if($('.chkContractItem:checked').length == $('.chkContractItem').length) $('#chkAllItem').prop('checked', true);
         else $('#chkAllItem').prop('checked', false);
     },
-    showOper: function() {
-        $(this.el).find('.playlistName').parent().removeClass("col-xs-10").addClass("col-xs-7");
-        $(this.el).find('.playlistOper').show();
-    },
-
-    hideOper: function() {
-        $(this.el).find('.playlistName').parent().removeClass("col-xs-7").addClass("col-xs-10");
-        $(this.el).find('.playlistOper').hide();
-    }
+    //showOper: function() {
+    //    $(this.el).find('.playlistName').parent().removeClass("col-xs-10").addClass("col-xs-7");
+    //    $(this.el).find('.playlistOper').show();
+    //},
+    //
+    //hideOper: function() {
+    //    $(this.el).find('.playlistName').parent().removeClass("col-xs-7").addClass("col-xs-10");
+    //    $(this.el).find('.playlistOper').hide();
+    //}
 
 });
 
 var ContractView = Backbone.View.extend({
-    el:'#mediaArea',
+    el:'#contractArea',
     events:{
         'click .sortByName': 'sortByName',
         'click .sortByStamp': 'sortByStamp',
@@ -153,7 +142,7 @@ var ContractView = Backbone.View.extend({
 
     render: function(tmpContracts) {
         $(this.el).children('tbody').empty();
-        var $sortFlag = $('#mediaArea').find('.caret:visible').parents('.sortBy').hasClass('dropup');
+        var $sortFlag = $('#contractArea').find('.caret:visible').parents('.sortBy').hasClass('dropup');
         if(!$sortFlag) {
             this.renderDesc(tmpContracts);
         } else {
@@ -162,21 +151,21 @@ var ContractView = Backbone.View.extend({
     },
     renderAsc:function(tmpContracts) {
         $.each(tmpContracts, function(i, o) {
-            var view = new PlaylistItemView({model: o});
-            $('#mediaArea').children('tbody').append(view.render());
+            var view = new ContractItemView({model: o});
+            $('#contractArea').children('tbody').append(view.render());
 
         })
     },
     renderDesc:function(tmpContracts) {
         $.each(tmpContracts, function(i, o) {
-            var view = new PlaylistItemView({model: o});
-            $('#mediaArea').children('tbody').prepend(view.render());
+            var view = new ContractItemView({model: o});
+            $('#contractArea').children('tbody').prepend(view.render());
 
 
         })
     },
     selectAllItem: function(e) {
-        $('.chkMediaItem').prop('checked', $('#chkAllItem').prop('checked'));
+        $('.chkContractItem').prop('checked', $('#chkAllItem').prop('checked'));
         if (e && e.stopPropagation) {
             //支持W3C
             e.stopPropagation();
@@ -225,53 +214,87 @@ var ContractView = Backbone.View.extend({
 /*view end*/
 var contractView = new ContractView;
 
-function delPlaylists() {
+function delContracts() {
     var $ids = [];
-    $.each($('.chkMediaItem:checked'), function(i, o) {
+    $.each($('.chkContractItem:checked'), function(i, o) {
         $ids.push($(o).val());
     });
 
-    if($ids.length == 0) return popBy("#deleteBtn", false, '请先选择您要删除的播放列表');
+    if($ids.length == 0) return popBy("#deleteBtn", false, '请先选择您要删除的合同');
     if(confirm("确认删除吗？")) {
         $.ajax({
             type: "DELETE",
-            url: "/playlists",
+            url: "/wes/contract",
             data: JSON.stringify($ids),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (json) {
-                if(json.status === 'success') {
+                console.log(json);
+                if(json.rtn === 0) {
                     $.each($ids,function(i,o) {
-                        var $temp = playlists.get(o);
-                        playlists.remove($temp);
+                        var $temp = contracts.get(o);
+                        contracts.remove($temp);
                     })
-                    $(".chkMediaItem:checked").parents('tr').remove();
+                    $(".chkContractItem:checked").parents('tr').remove();
                 }
             },
             error: function (err) {
-                alert(err.responseText)
+                console.log(err);
+                //alert("错误:" + err)
             }
         });
     }
     //location.reload();
 }
-function searchPlaylists() {
+
+//function delContracts() {
+//    var $ids = [];
+//    $.each($('.chkContractItem:checked'), function(i, o) {
+//        $ids.push($(o).val());
+//    });
+//
+//    if($ids.length == 0) return popBy("#deleteBtn", false, '请先选择您要删除的播放列表');
+//    if(confirm("确认删除吗？")) {
+//        $.ajax({
+//            type: "DELETE",
+//            url: "/contracts",
+//            data: JSON.stringify($ids),
+//            contentType: "application/json; charset=utf-8",
+//            dataType: "json",
+//            success: function (json) {
+//                if(json.status === 'success') {
+//                    $.each($ids,function(i,o) {
+//                        var $temp = contracts.get(o);
+//                        contracts.remove($temp);
+//                    })
+//                    $(".chkContractItem:checked").parents('tr').remove();
+//                }
+//            },
+//            error: function (err) {
+//                alert(err.responseText)
+//            }
+//        });
+//    }
+//    //location.reload();
+//}
+function searchContracts() {
     var query = $('#searchInput').val().trim();
-    var sortColNname = $('#mediaArea').find('.caret:visible').attr('sortColName') ?
-        $('#mediaArea').find('.caret:visible').attr('sortColName') : 'stamp';
-    var tmpPlaylists = playlists.sortBy(function (schedule) {
-        return schedule.get(sortColNname);
+    var sortColNname = $('#contractArea').find('.caret:visible').attr('sortColName') ?
+        $('#contractArea').find('.caret:visible').attr('sortColName') : 'stamp';
+    var tmpContracts = contracts.sortBy(function (schedule) {
+        //return schedule.get(sortColNname);
+        return true
     });
     if(query !== '') {
-        tmpPlaylists = tmpPlaylists.filter(function(playlist) {
-            return playlist.toJSON().name.indexOf(query) > -1 ;
+        tmpContracts = tmpContracts.filter(function(contract) {
+            return contract.toJSON().name.indexOf(query) > -1 ;
         });
-        playlistView.render(tmpPlaylists);
+        contractView.render(tmpContracts);
     } else {
-        tmpPlaylists = tmpPlaylists.filter(function() {
+        tmpContracts = tmpContracts.filter(function() {
             return true;
         });
-        playlistView.render(tmpPlaylists);
+        contractView.render(tmpContracts);
     }
 
     $('#chkAllItem').prop('checked', false);

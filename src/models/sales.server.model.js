@@ -15,7 +15,7 @@ var SalesSchema = new Schema({
         type:String,
         "default":''
     },
-    sellser: {
+    seller: {
         type:String,
         "default":''
     },
@@ -23,11 +23,10 @@ var SalesSchema = new Schema({
         type:String,
         "default":''
     },
-    product: {
-        type:Array,
-        "default":[]
+    currency: {
+        type:String,
+        "default":'CNY'
     },
-
     total: {
         type:String,
         "default":''
@@ -36,13 +35,17 @@ var SalesSchema = new Schema({
         type:String,
         "default":''
     },
-    marks: {
-        type:String,
-        "default":''
+    product: {
+        type:Array,
+        "default":[]
     },
     status:  {
         type:Number,
-        "default":0
+        "default":0//0：已签订，1：已收货，2：已完毕
+    },
+    belong: {
+        type:String,
+        "default":''
     },
     is_delete:{
         type:Number,

@@ -7,7 +7,7 @@ var _ = require('lodash');
 
 var PurchaseSchema = new Schema({
 
-    contract_no: {
+    sales: {//id
         type:String,
         "default":''
     },
@@ -15,25 +15,65 @@ var PurchaseSchema = new Schema({
         type:String,
         "default":''
     },
-    user: {
+    product: {//id
         type:String,
         "default":''
     },
-    supplier:  {
+    number:{
         type:String,
         "default":''
     },
-    product: {
-        type:Array,
-        "default":[]
-    },
-    marks: {
+    real_price:{
         type:String,
         "default":''
     },
-    status:  {
-        type:Number,
-        "default":0
+    tariff_rate:{
+        type:String,
+        "default":''
+    },
+    tariff:{
+        type:String,
+        "default":''
+    },
+    tariff_sum:{
+        type:String,
+        "default":''
+    },
+    tariff_price:{
+        type:String,
+        "default":''
+    },
+    saletax_rate:{
+        type:String,
+        "default":''
+    },
+    saletax:{
+        type:String,
+        "default":''
+    },
+    saletax_sum:{
+        type:String,
+        "default":''
+    },
+    vat_rate:{
+        type:String,
+        "default":''
+    },
+    vat:{
+        type:String,
+        "default":''
+    },
+    vat_sum:{
+        type:String,
+        "default":''
+    },
+    logis_cost:{
+        type:String,
+        "default":''
+    },
+    cost:{
+        type:String,
+        "default":''
     },
     is_delete:{
         type:Number,
