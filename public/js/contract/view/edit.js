@@ -59,7 +59,7 @@ function getProductName(id){
 ContractView = Backbone.View.extend({
     el: '#contractEdit',
     events: {
-        'click #saveSalesBtn':'save',
+        'click #save':'save',
     },
 
     initialize: function() {
@@ -105,9 +105,29 @@ ContractView = Backbone.View.extend({
             that.$('#saleAmountTxt').val(data.total);
             that.$('#paymentTxt').val(data.payment_provision);
 
+            that.$('#totalCostTxt').val(data.total_cost);
+            that.$('#totalReceivedTxt').val(data.total_received);
+            that.$('#balanceTxt').val(data.balance);
+            that.$('#profitTxt').val(data.profit);
+
             for (var i = 0; i < data.product.length; i++)
             {
-                displayProduct(data.product[i].category, data.product[i].name)
+                displayProduct(data.product[i])
+            }
+
+            for (var i = 0; i < data.logistics.length; i++)
+            {
+                displayLogistics(data.logistics[i], data.product)
+            }
+
+            for (var i = 0; i < data.invoice.length; i++)
+            {
+                displayInvoice(data.invoice[i])
+            }
+
+            for (var i = 0; i < data.payment.length; i++)
+            {
+                displayPayment(data.payment[i])
             }
 
         }});
@@ -123,26 +143,71 @@ ContractView = Backbone.View.extend({
         data.currency = $('#selectCurrency').val();
         data.total = $('#saleAmountTxt').val();
         data.payment_provision = $('#paymentTxt').val();
+        data.total_cost = $('#totalCostTxt').val();
+        data.total_received = $('#totalReceivedTxt').val();
+        data.balance = $('#balanceTxt').val();
+        data.profit = $('#profitTxt').val();
         data.product = [];
-        console.log($('#paymentTxt').val())
-
-        //$('#contractEdit').find('input,textarea,select').attr('readonly',true)
+        data.logistics = [];
+        data.invoice = [];
+        data.payment = [];
 
         var products =$("#productSetting").children('div');
         $.each(products,function(i,dom) {
             var product = {};
             product.category = $(dom).find("#selectCategory").val();
-            product.name = $(dom).find("#selectProduct").val();
+            product.id = $(dom).find("#selectProduct").val();
+            product.name = $(dom).find("#selectProduct option:selected").text();
             product.unit = $(dom).find("#unitTxt").val();
             product.number = $(dom).find("#numberTxt").val();
             product.price = $(dom).find("#priceTxt").val();
             product.sum = $(dom).find("#sumTxt").val();
             data.product.push(product);
-
-            console.log(product.name);
         });
 
-        console.log(data);
+        var logistics =$("#logisticsSetting").children('div');
+        $.each(logistics,function(i,dom) {
+            var logis = {};
+            logis.date = $(dom).find("#logisDate").val();
+            logis.product = $(dom).find("#selectProductLogis").val();
+            logis.number = $(dom).find("#numberLogisTxt").val();
+            logis.price = $(dom).find("#priceLogisTxt").val();
+            logis.sale_tax_rate = $(dom).find("#saleTaxRateTxt").val();
+            logis.sale_tax = $(dom).find("#saleTaxTxt").val();
+            logis.sale_tax_sum = $(dom).find("#saleTaxSumTxt").val();
+            logis.cost = $(dom).find("#costLogisTxt").val();
+            logis.tariff_rate = $(dom).find("#tariffRateTxt").val();
+            logis.tariff = $(dom).find("#tariffTxt").val();
+            logis.tariff_sum = $(dom).find("#tariffSumTxt").val();
+            logis.bg_price = $(dom).find("#bgPriceTxt").val();
+            logis.vat_rate = $(dom).find("#VATRateTxt").val();
+            logis.vat = $(dom).find("#VATTxt").val();
+            logis.vat_sum = $(dom).find("#VATSumTxt").val();
+            logis.total_cost = $(dom).find("#costTxt").val();
+
+            data.logistics.push(logis);
+        });
+
+        var invoice =$("#invoiceSetting").children('div');
+        $.each(invoice,function(i,dom) {
+            var inv = {};
+            inv.date = $(dom).find("#invoiceDate").val();
+            inv.no_start = $(dom).find("#invoiceNoStartTxt").val();
+            inv.no_end = $(dom).find("#invoiceNoEndTxt").val();
+
+            data.invoice.push(inv);
+        });
+
+        var payment =$("#paymentSetting").children('div');
+        $.each(payment,function(i,dom) {
+            var p = {};
+            p.date = $(dom).find("#paymentDate").val();
+            p.receive = $(dom).find("#receivedTxt").val();
+            p.method = $(dom).find("#selectPaymentMethod").val();
+            p.bank = $(dom).find("#bankTxt").val();
+
+            data.payment.push(p);
+        });
 
         if (!this.$el.attr('value')) {
             $.ajax({
@@ -154,7 +219,7 @@ ContractView = Backbone.View.extend({
                 success: function (json) {
                     console.log(json);
                     if (json.rtn === 0) {
-
+                        location.reload();
                     }
                 },
                 error: function (err) {
@@ -172,7 +237,7 @@ ContractView = Backbone.View.extend({
                 success: function (json) {
                     console.log(json);
                     if (json.rtn === 0) {
-
+                        location.reload();
                     }
                 },
                 error: function (err) {
@@ -182,24 +247,10 @@ ContractView = Backbone.View.extend({
         }
 
     },
-
-
 });
 
 var contractView = new ContractView();
 
-///** ProductSetting Model**/
-//ProductSetting = Backbone.Model.extend({
-//    defaults: {
-//        from: '',
-//        to: '',
-//        week:"00000000"
-//    }
-//});
-///** ProductSetting Collection**/
-//ProductSettings = Backbone.Collection.extend({
-//    model: ProductSetting
-//});
 var productSettings = new ProductSettings;
 /** ProductSetting View**/
 ProductSettingItemView = Backbone.View.extend({
@@ -215,9 +266,9 @@ ProductSettingItemView = Backbone.View.extend({
     },
     initialize:function() {
     },
-    render:function(optCategory, optProduct) {
+    render:function(data) {
         this.$el.addClass('alert alert-info')
-        this.$el.html(this.template({categoryOption: optCategory, productOption: optProduct}));
+        this.$el.html(this.template(data));
         return this;
     },
 
@@ -256,15 +307,26 @@ ProductSettingItemView = Backbone.View.extend({
         var total = 0;
         $.each(products,function(i,dom) {
             var val = $(dom).find(".sumTxt").val();
-            console.log(val);
             total += parseFloat(val);
         });
-        console.log(total);
         $("#saleAmountTxt").val(total.toFixed(2))
+
+        calculateBalance();
     }
 });
 
-function displayProduct(category, product) {
+function displayNewProduct() {
+
+    var data = {};
+    data.unit = '';
+    data.number = '0';
+    data.price = '0';
+    data.sum = '0';
+    displayProduct(data)
+
+}
+
+function displayProduct(product) {
 
     var optionCategory, optionProduct;
     categorys.fetch().done(function (models, status, jqXHR) {
@@ -273,8 +335,9 @@ function displayProduct(category, product) {
         });
 
         tmpCategorys.reverse();
+        optionCategory = '';
         $.each(tmpCategorys, function (i, o) {
-            if (o.get('_id') == category) {
+            if ((product.category) && o.get('_id') == product.category) {
                 optionCategory += '<option value="' + o.get('_id') + '" selected="selected">' + o.get('name') + '</option>';
             } else {
                 optionCategory += '<option value=' + o.get('_id') + '>' + o.get('name') + '</option>';
@@ -282,17 +345,15 @@ function displayProduct(category, product) {
         });
 
         products.fetch().done(function (models, status, jqXHR) {
+            var category_id = (product.category)? (product.category):tmpCategorys[0].get('_id');
             var tmpProducts = products.filter(function (p) {
-                if ((tmpCategorys) && (tmpCategorys[0]) && (p.get('category') == (category)?category:tmpCategorys[0].get('_id'))) {
-                    return true;
-                }else {
-                    return false;
-                }
+                return (p.get('category') == category_id);
             });
 
             tmpProducts.reverse();
+            optionProduct = '';
             $.each(tmpProducts, function (i, o) {
-                if (o.get('_id') == product) {
+                if ((product.id) && o.get('_id') == product.id) {
                     optionProduct += '<option value="' + o.get('_id') + '" selected="selected">' + o.get('name') + '</option>';
                 } else {
                     optionProduct += '<option value=' + o.get('_id') + '>' + o.get('name') + '</option>';
@@ -301,38 +362,19 @@ function displayProduct(category, product) {
             });
 
             var productSetting = new ProductSetting();
-            console.log(productSetting.cid);
             productSetting.set({id: productSetting.cid});
             productSettings.add(productSetting);
             var productSettingItemView = new ProductSettingItemView({model: productSetting});
 
-            $('#productSetting').append(productSettingItemView.render(optionCategory, optionProduct).el);
+            var data = product;
+            data.optionCategory = optionCategory;
+            data.optionProduct = optionProduct;
+            $('#productSetting').append(productSettingItemView.render(data).el);
         });
 
     });
 }
 
-
-//function categoryChange(selectProduct) {
-//    console.log('#################### categoryChange');
-//    console.log($('#selectCategory').val());
-//    console.log($('#selectProduct').val());
-//    console.log(selectProduct);
-//}
-
-
-///** LogisSetting Model**/
-//LogisSetting = Backbone.Model.extend({
-//    defaults: {
-//        from: '',
-//        to: '',
-//        week:"00000000"
-//    }
-//});
-///** LogisSetting Collection**/
-//LogisSettings = Backbone.Collection.extend({
-//    model: LogisSetting
-//});
 var logisSettings = new LogisSettings;
 /** LogisSetting View**/
 LogisSettingItemView = Backbone.View.extend({
@@ -350,13 +392,14 @@ LogisSettingItemView = Backbone.View.extend({
         'change .tariffSumTxt' : 'onSumChange',
         'change .saleTaxSumTxt' : 'onSumChange',
         'change .costLogisTxt' : 'onSumChange',
+        'change #costTxt' : 'onCostChange',
     },
     initialize:function() {
 
     },
-    render:function( optProduct) {
+    render:function(data) {
         this.$el.addClass('alert alert-info')
-        this.$el.html(this.template({productOption: optProduct}));
+        this.$el.html(this.template(data));
         return this;
     },
 
@@ -406,36 +449,68 @@ LogisSettingItemView = Backbone.View.extend({
         var VATSum = this.$('#VATSumTxt').val();
         var costLogis = this.$('#costLogisTxt').val();
         this.$('#costTxt').val((parseFloat(tariffSum) + parseFloat(saleTaxSum) + parseFloat(VATSum) + parseFloat(costLogis)).toFixed(2));
+        calculateBalance();
+    },
+
+    onCostChange : function () {
+        calculateBalance();
     },
 });
-function displayLogistics() {
-    var optionProduct = ''
-    var products =$("#productSetting").children('div');
-    $.each(products,function(i,dom) {
-        var text = $(dom).find("#selectProduct option:selected").text();
-        var id = $(dom).find("#selectProduct ").val();
-        optionProduct += '<option value=' + id + '>' + text + '</option>';
-    });
 
+function displayNewLogistics() {
+
+    var data = {};
+    data.date = '';
+    data.number = '0';
+    data.price = '0';
+    data.sale_tax_rate = '0';
+    data.sale_tax = '0';
+    data.sale_tax_sum = '0';
+    data.cost = '0';
+    data.tariff_rate = '0';
+    data.tariff = '0';
+    data.tariff_sum = '0';
+    data.bg_price = '0';
+    data.vat_rate = '0';
+    data.vat = '0';
+    data.vat_sum = '0';
+    data.total_cost = '0';
+
+    var products = [];
+    var productSetting =$("#productSetting").children('div');
+    $.each(productSetting,function(i,dom) {
+        var product = {};
+        product.name = $(dom).find("#selectProduct option:selected").text();
+        product.id =$(dom).find("#selectProduct").val();
+        products.push(product);
+    });
+    displayLogistics(data, products)
+
+}
+
+function displayLogistics(data, products) {
+    var optionProduct = '';
+    //var products =$("#productSetting").children('div');
+    //console.log(products);
+    //console.log(data)
+    $.each(products,function(i,o) {
+        var text = o.name;//$(dom).find("#selectProduct option:selected").text();
+        var id = o.id;//$(dom).find("#selectProduct").val();
+        if ((data.product) && data.product == id) {
+            optionProduct += '<option value="' + id + '" selected="selected">' + text + '</option>';
+        } else {
+            optionProduct += '<option value=' + id + '>' + text + '</option>';
+        }
+    });
+    data.productOption = optionProduct;
+    console.log(data)
     var logisSetting = new LogisSetting();
     logisSetting.set({id:logisSetting.cid});
     logisSettings.add(logisSetting);
     var logisSettingItemView = new LogisSettingItemView({model:logisSetting});
-    $('#logisticsSetting').append(logisSettingItemView.render(optionProduct).el);
+    $('#logisticsSetting').append(logisSettingItemView.render(data).el);
 }
 
-///** Invoice Model**/
-//Invoice = Backbone.Model.extend({
-//    defaults: {
-//        from: '',
-//        to: '',
-//        week:"00000000"
-//    }
-//});
-///** Invoice Collection**/
-//Invoices = Backbone.Collection.extend({
-//    model: Invoice
-//});
 var invoices = new Invoices;
 /** LogisSetting View**/
 InvoiceItemView = Backbone.View.extend({
@@ -448,22 +523,9 @@ InvoiceItemView = Backbone.View.extend({
     initialize:function() {
 
     },
-    render:function() {
-        var data = this.model.toJSON();
-
-        var btnCLass =[];
-        for(var i =1; i < 8;i++) {
-            if(data.week[i] === '0') {
-                btnCLass[i] = "btn-default";
-            } else {
-                btnCLass[i] = "btn-primary";
-            }
-        }
+    render:function(data) {
         this.$el.addClass('alert alert-info')
-        this.$el.html(this.template({id: data.id , from: data.from, to: data.to,
-            btnClass1:btnCLass[1], btnClass2:btnCLass[2], btnClass3:btnCLass[3],
-            btnClass4:btnCLass[4], btnClass5:btnCLass[5],btnClass6:btnCLass[6],
-            btnClass7:btnCLass[7]}));
+        this.$el.html(this.template(data));
         return this;
     },
 
@@ -472,12 +534,118 @@ InvoiceItemView = Backbone.View.extend({
         $(this.el).remove();
     }
 });
-function displayInvoice() {
+
+function displayNewInvoice() {
+
+    var data = {};
+    data.date = '';
+    data.no_start = '';
+    data.no_end = '';
+    displayInvoice(data)
+}
+
+function displayInvoice(data) {
 
     var invoice = new Invoice();
     invoice.set({id:invoice.cid});
-    logisSettings.add(invoice);
+    invoices.add(invoice);
     var invoiceItemView = new InvoiceItemView({model:invoice});
-    $('#invoiceSetting').append(invoiceItemView.render().el);
+    $('#invoiceSetting').append(invoiceItemView.render(data).el);
+}
+
+var payments = new Payments;
+/** LogisSetting View**/
+PaymentItemView = Backbone.View.extend({
+    tagName:'div',
+    template: _.template($('#payment-template').html()),
+    events:{
+        'click .removePayment': 'removePayment',
+        'change #receivedTxt' : 'onReceivedChange',
+    },
+    initialize:function() {
+
+    },
+    render:function(data) {
+        this.$el.addClass('alert alert-info')
+        this.$el.html(this.template(data));
+        return this;
+    },
+
+    removePayment:function() {
+        payments.remove(this.model);
+        $(this.el).remove();
+    },
+
+    onReceivedChange:function() {
+        var payments =$("#paymentSetting").children('div');
+        var total = 0;
+        $.each(payments,function(i,dom) {
+            var val = $(dom).find("#receivedTxt").val();
+            total += parseFloat(val);
+        });
+        $("#totalReceivedTxt").val(total.toFixed(2));
+
+        calculateBalance();
+    }
+});
+
+function displayNewPayment() {
+
+    var data = {};
+    data.date = '';
+    data.receive = '0';
+    data.method = '';
+    data.bank = '';
+    displayPayment(data)
+}
+
+function displayPayment(data) {
+    var optionPayment = '';
+    if (data.method == 'TT') {
+        optionPayment += '<option value="TT" selected="selected">TT</option>';
+    } else {
+        optionPayment += '<option value="TT">TT</option>';
+    }
+    if (data.method == 'CASH') {
+        optionPayment += '<option value="CASH" selected="selected">现金</option>';
+    } else {
+        optionPayment += '<option value="CASH">现金</option>';
+    }
+    if (data.method == 'BA') {
+        optionPayment += '<option value="BA" selected="selected">承兑</option>';
+    } else {
+        optionPayment += '<option value="BA">承兑</option>';
+    }
+    if (data.method == 'LC') {
+        optionPayment += '<option value="LC" selected="selected">LC</option>';
+    } else {
+        optionPayment += '<option value="LC">LC</option>';
+    }
+
+    data.optionPayment = optionPayment;
+
+    var payment = new Payment();
+    payment.set({id:payment.cid});
+    payments.add(payment);
+    var paymentItemView = new PaymentItemView({model:payment});
+    $('#paymentSetting').append(paymentItemView.render(data).el);
+}
+
+function calculateBalance() {
+
+    var saleAmount = parseFloat($("#saleAmountTxt").val());
+    var balance = saleAmount - parseFloat($("#totalReceivedTxt").val());
+    $("#balanceTxt").val(balance.toFixed(2));
+
+    var logistics =$("#logisticsSetting").children('div');
+    var total_cost = 0;
+    $.each(logistics,function(i,dom) {
+        var val = $(dom).find("#costTxt").val();
+        total_cost += parseFloat(val);
+    });
+    $("#totalCostTxt").val(total_cost.toFixed(2));
+
+    var profit =  saleAmount - total_cost;
+    $("#profitTxt").val(profit.toFixed(2));
 }
 

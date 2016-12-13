@@ -39,9 +39,37 @@ var SalesSchema = new Schema({
         type:Array,
         "default":[]
     },
+    logistics: {
+        type:Array,
+        "default":[]
+    },
+    invoice: {
+        type:Array,
+        "default":[]
+    },
+    payment: {
+        type:Array,
+        "default":[]
+    },
+    total_cost: {
+        type:String,
+        "default":''
+    },
+    total_received: {
+        type:String,
+        "default":''
+    },
+    balance: {
+        type:String,
+        "default":''
+    },
+    profit: {
+        type:String,
+        "default":''
+    },
     status:  {
         type:Number,
-        "default":0//0£ºÒÑÇ©¶©£¬1£ºÒÑÊÕ»õ£¬2£ºÒÑÍê±Ï
+        "default":0//0ï¼šå·²ç­¾è®¢ï¼Œ1ï¼šå·²æ”¶è´§ï¼Œ2ï¼šå·²å®Œæ¯•
     },
     belong: {
         type:String,

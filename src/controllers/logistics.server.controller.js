@@ -7,7 +7,7 @@ var Logistics = mongoose.model('Logistics')
 
 exports.index = function(req, res) {
     return res.render('login', {
-        title: 'µÇÂ¼'
+        title: 'ï¿½ï¿½Â¼'
     });
 };
 
@@ -51,15 +51,11 @@ exports.add = function(req, res) {
         if (logistics) {
             return res.json({
                 rtn: -2,
-                message:'ÒÑ´æÔÚ'
+                message:'ï¿½Ñ´ï¿½ï¿½ï¿½'
             });
         }
 
-        var info = {};
-        info.name = req.body.name;
-        info.description = req.body.description;
-        info.mark = req.body.mark;
-        Logistics.create(info, function(err) {
+        Logistics.create(req.body, function(err) {
             if (err) {
                 return res.json({
                     rtn: -3,

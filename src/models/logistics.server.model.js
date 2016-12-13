@@ -7,15 +7,71 @@ var _ = require('lodash');
 
 var LogisticsSchema = new Schema({
 
-    name: {
+    sales: {//id
         type:String,
         "default":''
     },
-    description: {
+    date: {
         type:String,
         "default":''
     },
-    marks:  {
+    product: {//id
+        type:String,
+        "default":''
+    },
+    number:{
+        type:String,
+        "default":''
+    },
+    real_price:{
+        type:String,
+        "default":''
+    },
+    tariff_rate:{
+        type:String,
+        "default":''
+    },
+    tariff:{
+        type:String,
+        "default":''
+    },
+    tariff_sum:{
+        type:String,
+        "default":''
+    },
+    tariff_price:{
+        type:String,
+        "default":''
+    },
+    saletax_rate:{
+        type:String,
+        "default":''
+    },
+    saletax:{
+        type:String,
+        "default":''
+    },
+    saletax_sum:{
+        type:String,
+        "default":''
+    },
+    vat_rate:{
+        type:String,
+        "default":''
+    },
+    vat:{
+        type:String,
+        "default":''
+    },
+    vat_sum:{
+        type:String,
+        "default":''
+    },
+    logis_cost:{
+        type:String,
+        "default":''
+    },
+    cost:{
         type:String,
         "default":''
     },
