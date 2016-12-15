@@ -20,6 +20,13 @@ exports.showEdit = function(req, res) {
     })
 }
 
+exports.createPage = function(req, res) {
+    return res.render('contract/edit', {
+
+        title: '新建合同'
+    });
+};
+
 exports.getContract = function(req, res) {
 
     Sales.findOne({
@@ -40,10 +47,15 @@ exports.getContract = function(req, res) {
 
 exports.array = function(req, res) {
 
-    //var ctegorys = [];
-    Sales.find({
-        is_delete : 0
-    }).exec(function(err, sale) {
+    console.log(req.cookies)
+
+    var filter = {};
+    filter.is_delete = 0
+    if (req.cookies.role != 'admin') {
+        filter.belong = req.cookies.token;
+    }
+
+    Sales.find(filter).exec(function(err, sale) {
 
         if (err) {
             return res.json({
@@ -61,6 +73,7 @@ exports.array = function(req, res) {
 };
 
 exports.list = function(req, res) {
+
     Sales.find({
         is_delete : 0
     }).exec(function(err, sale) {

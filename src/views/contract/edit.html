@@ -169,21 +169,39 @@
         </div>
 
         <div class="panel-body">
+          <div class="col-xs-3" id="deadlineDateDiv" style="">
+            <label for="deadlineDate" style="padding-left: 13px;">收款日期</label>
+            <div class="input-group ">
+              <input type="text" class="form-control" placeholder="收款日期" readonly="readonly" id="deadlineDate" onclick="datePick('#deadlineDate','#endDate',true)" onfocus="$(this).blur()"/>
+            <span class="input-group-addon curpointer" onclick="clearDateTime('#deadlineDate')">
+              <span class="glyphicon glyphicon-remove "></span>
+            </span>
+
+            </div>
+          </div>
           <div class="col-xs-3">
-            <label for="totalReceivedTxt" style="padding-left: 13px;">已收款金额</label>
+            <label for="receivablesTxt" style="padding-left: 13px;">应收款</label>
+            <input type="number" class="form-control " readOnly="true" id="receivablesTxt"/>
+          </div>
+          <div class="col-xs-3">
+            <label for="totalReceivedTxt" style="padding-left: 13px;">已收款</label>
             <input type="number" class="form-control " readOnly="true" id="totalReceivedTxt"/>
           </div>
 
           <div class="col-xs-3">
-            <label for="balanceTxt" style="padding-left: 13px;">余额</label>
+            <label for="balanceTxt" style="padding-left: 13px;">余款</label>
             <input type="number" class="form-control" readOnly="true" id="balanceTxt"/>
           </div>
-
+        </div>
+        <div class="panel-body">
+          <div class="col-xs-3">
+            <label for="costDisplayTxt" style="padding-left: 13px;">成本</label>
+            <input type="number" class="form-control" readOnly="true" id="costDisplayTxt"/>
+          </div>
           <div class="col-xs-3">
             <label for="profitTxt" style="padding-left: 13px;">利润</label>
             <input type="number" class="form-control" readOnly="true" id="profitTxt"/>
           </div>
-
         </div>
 
       </div>

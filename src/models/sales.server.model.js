@@ -67,6 +67,10 @@ var SalesSchema = new Schema({
         type:String,
         "default":''
     },
+    deadline: {
+        type:String,
+        "default":''
+    },
     status:  {
         type:Number,
         "default":0//0：已签订，1：已收货，2：已完毕

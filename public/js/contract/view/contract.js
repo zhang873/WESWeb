@@ -55,7 +55,8 @@ var ContractItemView = Backbone.View.extend({
         data.date = data.date;
         data.contract_no = data.contract_no;
         data.custom = getCustomName(data.custom);
-        data.seller = getUserName(data.seller);
+        //data.seller = getUserName(data.seller);
+        data.belong = getUserName(data.belong);
 
         if (data.total == '') {
             data.total = '0';
@@ -285,9 +286,11 @@ function searchContracts() {
         //return schedule.get(sortColNname);
         return true
     });
+    console.log(query);
     if(query !== '') {
         tmpContracts = tmpContracts.filter(function(contract) {
-            return contract.toJSON().name.indexOf(query) > -1 ;
+            console.log(contract.toJSON())
+            return (contract.toJSON().contract_no.indexOf(query) > -1 || contract.toJSON().contract_no.indexOf(query) > -1);
         });
         contractView.render(tmpContracts);
     } else {

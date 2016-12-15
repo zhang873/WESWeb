@@ -268,7 +268,7 @@ exports.deleteusers2 = function(req, res) {
 exports.array = function(req, res) {
   return User.find({
     is_delete:0,
-    role: 'normal'
+    //role: 'normal'
   }).exec(function(err, users) {
     var x;
     if (err) {

@@ -74,6 +74,7 @@ app.use(require(path.join(__dirname, './src/routes/warehouse.server.routes')))
 app.use(require(path.join(__dirname, './src/routes/contract.server.routes')))
 app.use(require(path.join(__dirname, './src/routes/department.server.routes')))
 app.use(require(path.join(__dirname, './src/routes/category.server.routes')))
+app.use(require(path.join(__dirname, './src/routes/statistics.server.routes')))
 // 错误处理中间件
 app.use(require(path.join(__dirname, './src/libs/err500')))
 app.use(require(path.join(__dirname, './src/libs/err404')))

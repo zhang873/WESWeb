@@ -11,7 +11,7 @@ app.route('/contract')
     .get(user.requiresLogin, contract.index)
 
 app.route('/contract/create')
-    .get(user.requiresLogin, contract.showEdit)
+    .get(user.requiresLogin, contract.createPage)
 
 app.route('/contract/edit')
     .get(user.requiresLogin, contract.showEdit);

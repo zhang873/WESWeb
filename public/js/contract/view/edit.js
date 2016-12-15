@@ -66,7 +66,7 @@ ContractView = Backbone.View.extend({
 
         var that = this;
         var id = this.$el.attr('value');
-        var userChildren = this.$('#selectUser');
+        var userChildren = that.$('#selectUser');
         users.fetch().done(function(models,status,jqXHR) {
             var tmpUsers = users.filter(function() {
                 return true;
@@ -75,63 +75,63 @@ ContractView = Backbone.View.extend({
             $.each(tmpUsers,function(i,o){
                 userChildren.append('<option value=' + o.get('_id')  + '>' + o.get('name') + '</option>');
             });
-        });
 
-        var customChildren = this.$('#selectCustom');
-        customs.fetch().done(function(models,status,jqXHR) {
-            var tmpCustoms = customs.filter(function() {
-                return true;
+            var customChildren = that.$('#selectCustom');
+            customs.fetch().done(function(models,status,jqXHR) {
+                var tmpCustoms = customs.filter(function() {
+                    return true;
+                });
+                tmpCustoms.reverse();
+                $.each(tmpCustoms,function(i,o){
+                    customChildren.append('<option value=' + o.get('_id')  + '>' + o.get('name') + '</option>');
+                });
+
+                if (id) {
+                    var contract = new Contract({id: id});
+                    contract.fetch({success: function(model, response) {
+                        that.model = model;
+                        var data = model.toJSON();
+
+                        that.$('#saleNoTxt').val(data.contract_no);
+                        that.$('#saleDate').val(data.date);
+                        that.$('#selectUser').val(data.seller);
+                        that.$('#selectCustom').val(data.custom);
+                        that.$('#selectCurrency').val(data.currency);
+                        that.$('#saleAmountTxt').val(data.total);
+                        that.$('#receivablesTxt').val(data.total);
+                        that.$('#paymentTxt').val(data.payment_provision);
+
+                        that.$('#totalCostTxt').val(data.total_cost);
+                        that.$('#costDisplayTxt').val(data.total_cost);
+                        that.$('#totalReceivedTxt').val(data.total_received);
+                        that.$('#balanceTxt').val(data.balance);
+                        that.$('#profitTxt').val(data.profit);
+                        that.$('#deadlineDate').val(data.deadline);
+
+                        for (var i = 0; i < data.product.length; i++)
+                        {
+                            displayProduct(data.product[i])
+                        }
+
+                        for (var i = 0; i < data.logistics.length; i++)
+                        {
+                            displayLogistics(data.logistics[i], data.product)
+                        }
+
+                        for (var i = 0; i < data.invoice.length; i++)
+                        {
+                            displayInvoice(data.invoice[i])
+                        }
+
+                        for (var i = 0; i < data.payment.length; i++)
+                        {
+                            displayPayment(data.payment[i])
+                        }
+
+                    }});
+                }
             });
-            tmpCustoms.reverse();
-            $.each(tmpCustoms,function(i,o){
-                customChildren.append('<option value=' + o.get('_id')  + '>' + o.get('name') + '</option>');
-            });
         });
-
-        if (!id) {
-            return;
-        }
-
-        var contract = new Contract({id: id});
-        contract.fetch({success: function(model, response) {
-            that.model = model;
-            var data = model.toJSON();
-
-            that.$('#saleNoTxt').val(data.contract_no);
-            that.$('#saleDate').val(data.date);
-            that.$('#selectUser').val(data.seller);
-            that.$('#selectCustom').val(data.custom);
-            that.$('#selectCurrency').val(data.currency);
-            that.$('#saleAmountTxt').val(data.total);
-            that.$('#paymentTxt').val(data.payment_provision);
-
-            that.$('#totalCostTxt').val(data.total_cost);
-            that.$('#totalReceivedTxt').val(data.total_received);
-            that.$('#balanceTxt').val(data.balance);
-            that.$('#profitTxt').val(data.profit);
-
-            for (var i = 0; i < data.product.length; i++)
-            {
-                displayProduct(data.product[i])
-            }
-
-            for (var i = 0; i < data.logistics.length; i++)
-            {
-                displayLogistics(data.logistics[i], data.product)
-            }
-
-            for (var i = 0; i < data.invoice.length; i++)
-            {
-                displayInvoice(data.invoice[i])
-            }
-
-            for (var i = 0; i < data.payment.length; i++)
-            {
-                displayPayment(data.payment[i])
-            }
-
-        }});
-
     },
 
     save:function(e,next) {
@@ -147,6 +147,7 @@ ContractView = Backbone.View.extend({
         data.total_received = $('#totalReceivedTxt').val();
         data.balance = $('#balanceTxt').val();
         data.profit = $('#profitTxt').val();
+        data.deadline = $('#deadlineDate').val();
         data.product = [];
         data.logistics = [];
         data.invoice = [];
@@ -210,6 +211,7 @@ ContractView = Backbone.View.extend({
         });
 
         if (!this.$el.attr('value')) {
+            data.belong = $.cookie('token');
             $.ajax({
                 type: "POST",
                 url: "/wes/sales",
@@ -217,9 +219,8 @@ ContractView = Backbone.View.extend({
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (json) {
-                    console.log(json);
                     if (json.rtn === 0) {
-                        location.reload();
+                        location.href = '/contract';
                     }
                 },
                 error: function (err) {
@@ -235,9 +236,8 @@ ContractView = Backbone.View.extend({
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (json) {
-                    console.log(json);
                     if (json.rtn === 0) {
-                        location.reload();
+                        location.href = '/contract';
                     }
                 },
                 error: function (err) {
@@ -309,7 +309,8 @@ ProductSettingItemView = Backbone.View.extend({
             var val = $(dom).find(".sumTxt").val();
             total += parseFloat(val);
         });
-        $("#saleAmountTxt").val(total.toFixed(2))
+        $("#saleAmountTxt").val(total.toFixed(2));
+        $("#receivablesTxt").val(total.toFixed(2))
 
         calculateBalance();
     }
@@ -490,9 +491,6 @@ function displayNewLogistics() {
 
 function displayLogistics(data, products) {
     var optionProduct = '';
-    //var products =$("#productSetting").children('div');
-    //console.log(products);
-    //console.log(data)
     $.each(products,function(i,o) {
         var text = o.name;//$(dom).find("#selectProduct option:selected").text();
         var id = o.id;//$(dom).find("#selectProduct").val();
@@ -503,7 +501,6 @@ function displayLogistics(data, products) {
         }
     });
     data.productOption = optionProduct;
-    console.log(data)
     var logisSetting = new LogisSetting();
     logisSetting.set({id:logisSetting.cid});
     logisSettings.add(logisSetting);
@@ -644,6 +641,7 @@ function calculateBalance() {
         total_cost += parseFloat(val);
     });
     $("#totalCostTxt").val(total_cost.toFixed(2));
+    $("#costDisplayTxt").val(total_cost.toFixed(2));
 
     var profit =  saleAmount - total_cost;
     $("#profitTxt").val(profit.toFixed(2));
