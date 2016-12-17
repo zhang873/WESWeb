@@ -43,37 +43,64 @@
 
 </script>
 
-<div id="category">
-  <!-- 新建-->
-  <div class="modal fade" id="categoryCreate" tabindex="-1" role="dialog" aria-labelledby="categoryCreateLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="categoryCreateLabel">新建</h4>
+<div class="modal fade" id="customModal" tabindex="-1" role="dialog" aria-labelledby="customPage" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="h3-head" id="customPage">选择客户</h4>
+        <!--<div class="col-xs-3 input-group pull-right searchPanel" style="position: absolute;top:18px;right: 80px;">-->
+          <!--<input type="text" class="form-control" id="schedulesearchInput" placeholder="请输入名称" style="width: 150px;"/><span class="input-group-btn"><button type="submit" class="btn btn-default" id="searchBtn">搜索</button></span>-->
+        <!--</div>-->
+      </div>
+      <div class="modal-body">
+        <!--<div class="panel panel-default">-->
+          <!--<table id="group-list" class="table table-striped" style="table-layout:fixed;word-wrap:break-word;">-->
+            <!--<thead class="thead-color">-->
+            <!--<tr>-->
+              <!--<th>-->
+                <!--<span class="col-xs-1"><input type="checkbox"/></span>-->
+                <!--<div class="col-xs-9">-->
+                  <!--<span> 分组名</span>-->
+                <!--</div>-->
+              <!--</th>-->
+            <!--</tr>-->
+            <!--</thead>-->
+            <!--<tbody>-->
+            <!--</tbody>-->
+          <!--</table>-->
+        <!--</div>-->
+        <div class="panel panel-default">
+          <table id="box-list" class="table table-striped" style="table-layout:fixed;word-wrap:break-word;">
+            <thead class="thead-color">
+            <tr>
+              <th class="col-xs-4  curpointer sortByName sortBy">
+                <span class="col-xs-1"><input type="checkbox"/></span>
+                <div class="col-xs-9">
+                  <span class="">
+                    客户名称<b class="caret " sortcolname="name" style="display:none"></b>
+                  </span>
+                </div>
+              </th>
+              <th class="col-xs-3  curpointer sortByAlias sortBy">
+                简介<b class="caret" sortcolname="playlist" style="display:none"></b>
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
         </div>
-        <div class="modal-body">
-          <div>
-            <div class="row ">
-              <div class="input-group col-xs-8 col-xs-offset-2">
-                <span class="input-group-addon spanAlignFiX">名称:</span><input type="text" class="form-control" placeholder="类别名称" id="nameInputCreate"/>
-              </div>
-            </div>
-            <br/>
-            <div class="row">
-              <div class="input-group col-xs-8 col-xs-offset-2">
-                <span class="input-group-addon spanAlignFiX">描述:</span><input type="text" class="form-control" placeholder="描述" id="descInputCreate"/>
-              </div>
-            </div>
-            <br/>
-          </div>
-          <div class="col-xs-offset-9 diabtnfix ">
-            <button type="button" class="btn btn-primary " id="createCategory">确定</button><button type="button" class="btn btn-default gap" data-dismiss="modal">关闭</button>
-          </div>
+        <div class="col-xs-offset-9 diabtnfix ">
+          <button type="button" class="btn btn-primary " id="customBtn">确定</button>
+          <button type="button" class="btn btn-default gap" data-dismiss="modal">关闭</button>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+<div id="category">
 
   <div class="modal fade" id="deleteCategoryAlert" tabindex="-1" role="dialog" aria-labelledby="createCategoryLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -91,22 +118,6 @@
       </div>
     </div>
   </div>
-
-  <!--<div class="well well-sm fix-top-2">-->
-    <!--<div class="container fixed-width">-->
-      <!--<button type="button" class="btn btn-default" id="createBtn">-->
-        <!--<span class="glyphicon glyphicon-new-window"></span>-->
-        <!--新建-->
-      <!--</button>-->
-      <!--<button type="button" class="btn btn-default gap" id="deleteBtn" onclick="delCategory()">-->
-        <!--<span class="glyphicon glyphicon-trash"></span>-->
-        <!--删除-->
-      <!--</button>-->
-      <!--<div class="col-xs-3 input-group pull-right searchPanel">-->
-        <!--<input type="text" class="form-control" id="searchInput" placeholder="请输入类别名称" oninput="searchCategorys()"/><span class="input-group-btn"><button type="submit" class="btn btn-default" id="searchBtn" onclick="searchCategorys()">搜索</button></span>-->
-      <!--</div>-->
-    <!--</div>-->
-  <!--</div>-->
 
   <div class="container fix-top-2-tablelist-default">
     <div class="panel-body alert alert-info">
@@ -132,15 +143,15 @@
       </div>
       <div class="col-xs-2">
         <label for="receivablesTxt" style="padding-left: 13px;">客户</label>
-        <input type="number" class="form-control " id="receivablesTxt"/>
+        <input type="text" class="form-control " id="receivablesTxt" onclick="showCustom()"/>
       </div>
       <div class="col-xs-2">
         <label for="totalReceivedTxt" style="padding-left: 13px;">业务员/业务组</label>
-        <input type="number" class="form-control " id="totalReceivedTxt"/>
+        <input type="text" class="form-control " id="totalReceivedTxt"/>
       </div>
       <div class="col-xs-2">
         <label for="totalReceivedTxt" style="padding-left: 13px;">产品</label>
-        <input type="number" class="form-control " id="totalReceivedTxt"/>
+        <input type="text" class="form-control " id="totalReceivedTxt"/>
       </div>
 
       <div class="col-xs-2 text-right" style="padding-top: 20px;">
@@ -206,6 +217,29 @@
   </td>
 
 </script>
+
+<script type="text/template" id="custom-template" style="display: none">
+
+  <td class="col-xs-3">
+    <span class="col-xs-1 "><input class="customChoise" type="checkbox" value="{{id}}"/></span>
+    <div>
+      <span class="name displayName" title="{{name}}" style="width:100px;">{{name}}</span>
+    </div>
+  </td>
+  <td class="col-xs-3">
+    <span class="td-alias displayName " title="{{description}}">{{description}}</span>
+  </td>
+</script>
+<!--<script type="text/template" id="group-template" style="display: none">-->
+
+  <!--<td>-->
+    <!--<span class="col-xs-1"><input class="publishGroup" type="checkbox" value="{{id}}"/></span>-->
+    <!--<div>-->
+      <!--<span class="name displayName" title="{{name}}">{{name}}</span>-->
+    <!--</div>-->
+  <!--</td>-->
+
+<!--</script>-->
 
 {% endraw %}
 

@@ -223,37 +223,8 @@ var CategoryView = Backbone.View.extend({
 /*view end*/
 var categoryView = new CategoryView;
 
-function delCategory() {
-    var $ids = [];
-    $.each($('.chkCategoryItem:checked'), function(i, o) {
-        $ids.push($(o).val());
-    });
-
-    if($ids.length == 0) return popBy("#deleteBtn", false, '请先选择您要删除的类别');
-    if(confirm("确认删除吗？")) {
-        $.ajax({
-            type: "DELETE",
-            url: "/wes/category",
-            data: JSON.stringify($ids),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (json) {
-                console.log(json);
-                if(json.rtn === 0) {
-                    $.each($ids,function(i,o) {
-                        var $temp = categorys.get(o);
-                        categorys.remove($temp);
-                    })
-                    $(".chkCategoryItem:checked").parents('tr').remove();
-                }
-            },
-            error: function (err) {
-                console.log(err);
-                //alert("错误:" + err)
-            }
-        });
-    }
-    //location.reload();
+function showCustom() {
+    $('#customModal').modal('show');
 }
 function searchCategorys() {
     var query = $('#searchInput').val().trim();
