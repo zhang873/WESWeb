@@ -86,6 +86,9 @@
         <th class="col-xs-2 curpointer sortByUser sortBy text-center">
           经办人<b class="caret" sortcolname="user" style="display:none"></b>
         </th>
+        <th class="col-xs-2 curpointer sortByStamp sortBy text-center">
+          业务员<b class="caret" sortcolname="seller" style="display:none"></b>
+        </th>
         <th class="col-xs-2 curpointer sortByUser sortBy text-center">
           客户<b class="caret" sortcolname="custom" style="display:none"></b>
         </th>
@@ -97,9 +100,6 @@
         </th>
         <th class="col-xs-2 curpointer sortByStamp sortBy text-center">
           余款<b class="caret" sortcolname="total" style="display:none"></b>
-        </th>
-        <th class="col-xs-2 curpointer sortByStamp sortBy text-center">
-          合同状态<b class="caret" sortcolname="status" style="display:none"></b>
         </th>
       </tr>
       </thead>
@@ -127,6 +127,9 @@
     {{belong}}
   </td>
   <td class="text-center">
+    {{seller}}
+  </td>
+  <td class="text-center">
     {{custom}}
   </td>
   <td class="text-center">
@@ -137,9 +140,6 @@
   </td>
   <td class="text-center">
     {{balance}}
-  </td>
-  <td class="text-center">
-    {{status}}
   </td>
 
 </script>

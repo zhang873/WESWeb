@@ -10,5 +10,8 @@ var app = express.Router()
 app.route('/statistics')
     .get(user.requiresLogin, statistics.index)
 
+app.route('/wes/statistics')
+    .post(user.requiresLogin, statistics.calculate)
+
 
 module.exports = app

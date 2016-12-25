@@ -55,7 +55,7 @@ exports.array = function(req, res) {
         filter.belong = req.cookies.token;
     }
 
-    Sales.find(filter).exec(function(err, sale) {
+    Sales.find(filter).sort({"contract_no":-1}).exec(function(err, sale) {
 
         if (err) {
             return res.json({

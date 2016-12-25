@@ -54,37 +54,21 @@
         <!--</div>-->
       </div>
       <div class="modal-body">
-        <!--<div class="panel panel-default">-->
-          <!--<table id="group-list" class="table table-striped" style="table-layout:fixed;word-wrap:break-word;">-->
-            <!--<thead class="thead-color">-->
-            <!--<tr>-->
-              <!--<th>-->
-                <!--<span class="col-xs-1"><input type="checkbox"/></span>-->
-                <!--<div class="col-xs-9">-->
-                  <!--<span> 分组名</span>-->
-                <!--</div>-->
-              <!--</th>-->
-            <!--</tr>-->
-            <!--</thead>-->
-            <!--<tbody>-->
-            <!--</tbody>-->
-          <!--</table>-->
-        <!--</div>-->
         <div class="panel panel-default">
-          <table id="box-list" class="table table-striped" style="table-layout:fixed;word-wrap:break-word;">
+          <table id="custom-list" class="table table-striped" style="table-layout:fixed;word-wrap:break-word;">
             <thead class="thead-color">
             <tr>
               <th class="col-xs-4  curpointer sortByName sortBy">
-                <span class="col-xs-1"><input type="checkbox"/></span>
+                <span class="col-xs-1"><input type="checkbox" id="chkAllItem"/></span>
                 <div class="col-xs-9">
                   <span class="">
                     客户名称<b class="caret " sortcolname="name" style="display:none"></b>
                   </span>
                 </div>
               </th>
-              <th class="col-xs-3  curpointer sortByAlias sortBy">
-                简介<b class="caret" sortcolname="playlist" style="display:none"></b>
-              </th>
+              <!--<th class="col-xs-3  curpointer sortByAlias sortBy">-->
+                <!--简介<b class="caret" sortcolname="playlist" style="display:none"></b>-->
+              <!--</th>-->
             </tr>
             </thead>
             <tbody>
@@ -92,7 +76,7 @@
           </table>
         </div>
         <div class="col-xs-offset-9 diabtnfix ">
-          <button type="button" class="btn btn-primary " id="customBtn">确定</button>
+          <button type="button" class="btn btn-primary customBtn" id="customBtn">确定</button>
           <button type="button" class="btn btn-default gap" data-dismiss="modal">关闭</button>
         </div>
       </div>
@@ -100,7 +84,121 @@
   </div>
 </div>
 
-<div id="category">
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userPage" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="h3-head" id="userPage">选择人员</h4>
+        <!--<div class="col-xs-3 input-group pull-right searchPanel" style="position: absolute;top:18px;right: 80px;">-->
+        <!--<input type="text" class="form-control" id="schedulesearchInput" placeholder="请输入名称" style="width: 150px;"/><span class="input-group-btn"><button type="submit" class="btn btn-default" id="searchBtn">搜索</button></span>-->
+        <!--</div>-->
+      </div>
+      <div class="modal-body">
+        <div class="panel panel-default">
+          <table id="department-list" class="table table-striped" style="table-layout:fixed;word-wrap:break-word;">
+            <thead class="thead-color">
+              <tr>
+                <th>
+                  <span class="col-xs-1"><input type="checkbox" id="chkAllDepartmentItem"/></span>
+                  <div class="col-xs-9">
+                    <span> 部门名</span>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel panel-default">
+          <table id="user-list" class="table table-striped" style="table-layout:fixed;word-wrap:break-word;">
+            <thead class="thead-color">
+            <tr>
+              <th class="col-xs-4  curpointer sortByName sortBy">
+                <span class="col-xs-1"><input type="checkbox" id="chkAllUserItem"/></span>
+                <div class="col-xs-9">
+                  <span class="">
+                    人员<b class="caret " sortcolname="name" style="display:none"></b>
+                  </span>
+                </div>
+              </th>
+              <!--<th class="col-xs-3  curpointer sortByAlias sortBy">-->
+                <!--简介<b class="caret" sortcolname="playlist" style="display:none"></b>-->
+              <!--</th>-->
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-xs-offset-9 diabtnfix ">
+          <button type="button" class="btn btn-primary userBtn" id="userBtn">确定</button>
+          <button type="button" class="btn btn-default gap" data-dismiss="modal">关闭</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productPage" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="h3-head" id="productPage">选择产品</h4>
+        <!--<div class="col-xs-3 input-group pull-right searchPanel" style="position: absolute;top:18px;right: 80px;">-->
+        <!--<input type="text" class="form-control" id="schedulesearchInput" placeholder="请输入名称" style="width: 150px;"/><span class="input-group-btn"><button type="submit" class="btn btn-default" id="searchBtn">搜索</button></span>-->
+        <!--</div>-->
+      </div>
+      <div class="modal-body">
+        <div class="panel panel-default">
+          <table id="category-list" class="table table-striped" style="table-layout:fixed;word-wrap:break-word;">
+            <thead class="thead-color">
+            <tr>
+              <th>
+                <span class="col-xs-1"><input type="checkbox" id="chkAllCategoryItem"/></span>
+                <div class="col-xs-9">
+                  <span> 类别名</span>
+                </div>
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel panel-default">
+          <table id="product-list" class="table table-striped" style="table-layout:fixed;word-wrap:break-word;">
+            <thead class="thead-color">
+            <tr>
+              <th class="col-xs-4  curpointer sortByName sortBy">
+                <span class="col-xs-1"><input type="checkbox" id="chkAllProductItem"/></span>
+                <div class="col-xs-9">
+                  <span class="">
+                    产品名<b class="caret " sortcolname="name" style="display:none"></b>
+                  </span>
+                </div>
+              </th>
+              <!--<th class="col-xs-3  curpointer sortByAlias sortBy">-->
+              <!--简介<b class="caret" sortcolname="playlist" style="display:none"></b>-->
+              <!--</th>-->
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-xs-offset-9 diabtnfix ">
+          <button type="button" class="btn btn-primary productBtn" id="productBtn">确定</button>
+          <button type="button" class="btn btn-default gap" data-dismiss="modal">关闭</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="statistics">
 
   <div class="modal fade" id="deleteCategoryAlert" tabindex="-1" role="dialog" aria-labelledby="createCategoryLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -121,7 +219,7 @@
 
   <div class="container fix-top-2-tablelist-default">
     <div class="panel-body alert alert-info">
-      <div class="col-xs-2" id="startDateDiv" >
+      <div class="col-xs-3" id="startDateDiv" >
         <label for="startDate" style="padding-left: 13px;">开始日期</label>
         <div class="input-group ">
           <input type="text" class="form-control" placeholder="开始日期" readonly="readonly" id="startDate" onclick="datePick('#startDate','',true)" onfocus="$(this).blur()"/>
@@ -131,7 +229,7 @@
 
         </div>
       </div>
-      <div class="col-xs-2" id="endDateDiv" style="">
+      <div class="col-xs-3" id="endDateDiv" style="">
         <label for="endDate" style="padding-left: 13px;">结束日期</label>
         <div class="input-group ">
           <input type="text" class="form-control" placeholder="结束日期" readonly="readonly" id="endDate" onclick="datePick('#endDate','',true)" onfocus="$(this).blur()"/>
@@ -142,20 +240,20 @@
         </div>
       </div>
       <div class="col-xs-2">
-        <label for="receivablesTxt" style="padding-left: 13px;">客户</label>
-        <input type="text" class="form-control " id="receivablesTxt" onclick="showCustom()"/>
+        <label for="customsTxt" style="padding-left: 13px;">客户</label>
+        <input type="text" class="form-control " id="customsTxt" readonly="readonly" onclick="showCustom()"/>
       </div>
       <div class="col-xs-2">
-        <label for="totalReceivedTxt" style="padding-left: 13px;">业务员/业务组</label>
-        <input type="text" class="form-control " id="totalReceivedTxt"/>
+        <label for="usersTxt" style="padding-left: 13px;">业务员/业务组</label>
+        <input type="text" class="form-control " id="usersTxt" readonly="readonly" onclick="showUser()"/>
       </div>
-      <div class="col-xs-2">
-        <label for="totalReceivedTxt" style="padding-left: 13px;">产品</label>
-        <input type="text" class="form-control " id="totalReceivedTxt"/>
-      </div>
+      <!--<div class="col-xs-2">-->
+        <!--<label for="productsTxt" style="padding-left: 13px;">产品</label>-->
+        <!--<input type="text" class="form-control " id="productsTxt" readonly="readonly" onclick="showProduct()"/>-->
+      <!--</div>-->
 
       <div class="col-xs-2 text-right" style="padding-top: 20px;">
-        <button type="button" class="btn btn-primary " id="createLogisticsConfirmBtn" onclick="displayNewLogistics()">查询</button>
+        <button type="button" class="btn btn-primary " id="searchBtn" onclick="search()">查询</button>
       </div>
     </div>
   </div>
@@ -165,16 +263,16 @@
     <div class="panel-body">
 
       <div class="col-xs-3">
-        <label for="receivablesTxt" style="padding-left: 13px;">总销售额</label>
-        <input type="number" class="form-control " readonly="true" id="receivablesTxt"/>
+        <label for="saleTxt" style="padding-left: 13px;">总销售额</label>
+        <input type="number" class="form-control " readonly="true" id="saleTxt"/>
       </div>
       <div class="col-xs-3">
-        <label for="totalReceivedTxt" style="padding-left: 13px;">利润总和</label>
-        <input type="number" class="form-control " readonly="true" id="totalReceivedTxt"/>
+        <label for="profitTxt" style="padding-left: 13px;">利润总和</label>
+        <input type="number" class="form-control " readonly="true" id="profitTxt"/>
       </div>
       <div class="col-xs-3">
-        <label for="totalReceivedTxt" style="padding-left: 13px;">余款总和</label>
-        <input type="number" class="form-control " readonly="true" id="totalReceivedTxt"/>
+        <label for="balanceTxt" style="padding-left: 13px;">余款总和</label>
+        <input type="number" class="form-control " readonly="true" id="balanceTxt"/>
       </div>
     </div>
   </div>
@@ -182,7 +280,7 @@
   <div class="container fix-top-1-tablelist-default">
     <h3 class="pageInfo"><img src="images/header.png" class="circlePic"/>&nbsp产品列表</h3>
     <div class="panel panel-default">
-      <table class="table table-striped" style="table-layout:fixed;word-wrap:break-word;" id="categoryArea">
+      <table class="table table-striped" style="table-layout:fixed;word-wrap:break-word;" id="productArea">
         <thead class="thead-color">
         <tr>
           <th class="col-xs-5 curpointer sortByName sortBy" id="head">
@@ -205,7 +303,7 @@
 {% raw %}
 
 
-<script type="text/template" id="tmplCategory">
+<script type="text/template" id="tmplProdect">
 
   <td>
     <div class="col-xs-10 ">
@@ -219,27 +317,60 @@
 </script>
 
 <script type="text/template" id="custom-template" style="display: none">
-
   <td class="col-xs-3">
-    <span class="col-xs-1 "><input class="customChoise" type="checkbox" value="{{id}}"/></span>
+    <span class="col-xs-1 "><input class="customChoice" type="checkbox" value="{{id}}" name="{{name}}"/></span>
     <div>
-      <span class="name displayName" title="{{name}}" style="width:100px;">{{name}}</span>
+      <span class="name displayName" title="{{name}}" >{{name}}</span>
     </div>
   </td>
+</script>
+
+<script type="text/template" id="department-template" style="display: none">
   <td class="col-xs-3">
-    <span class="td-alias displayName " title="{{description}}">{{description}}</span>
+    <span class="col-xs-1 "><input class="departmentChoice" type="checkbox" value="{{id}}" name="{{name}}"/></span>
+    <div>
+      <span class="name displayName" title="{{name}}">{{name}}</span>
+    </div>
   </td>
 </script>
-<!--<script type="text/template" id="group-template" style="display: none">-->
 
-  <!--<td>-->
-    <!--<span class="col-xs-1"><input class="publishGroup" type="checkbox" value="{{id}}"/></span>-->
-    <!--<div>-->
-      <!--<span class="name displayName" title="{{name}}">{{name}}</span>-->
-    <!--</div>-->
-  <!--</td>-->
+<script type="text/template" id="user-template" style="display: none">
+  <td class="col-xs-3">
+    <span class="col-xs-1 "><input class="userChoice" type="checkbox" value="{{id}}" name="{{name}}" title="{{department}}"/></span>
+    <div>
+      <span class="name displayName" title="{{name}}" >{{name}}</span>
+    </div>
+  </td>
+</script>
 
-<!--</script>-->
+<script type="text/template" id="category-template" style="display: none">
+  <td class="col-xs-3">
+    <span class="col-xs-1 "><input class="categoryChoice" type="checkbox" value="{{id}}" name="{{name}}"/></span>
+    <div>
+      <span class="name displayName" title="{{name}}">{{name}}</span>
+    </div>
+  </td>
+</script>
+
+<script type="text/template" id="product-template" style="display: none">
+  <td class="col-xs-3">
+    <span class="col-xs-1 "><input class="productChoice" type="checkbox" value="{{id}}" name="{{name}}" title="{{category}}"/></span>
+    <div>
+      <span class="name displayName" title="{{name}}" >{{name}}</span>
+    </div>
+  </td>
+</script>
+
+<script type="text/template" id="product-list-template" style="display: none">
+  <td class="col-xs-3">
+    <div>
+      <span class="name displayName" title="{{name}}" >{{name}}</span>
+    </div>
+  </td>
+  <td class="text-center">
+    {{number}}
+  </td>
+</script>
 
 {% endraw %}
 
@@ -251,11 +382,15 @@
 <script src="/js/bootstrap-datetimepicker.zh-CN.js"></script>
 <script src="/js/custom/model/custom.js"></script>
 <script src="/js/user/model/user.js"></script>
+<script src="/js/department/model/department.js"></script>
 <script src="/js/category/model/category.js"></script>
 <script src="/js/product/model/product.js"></script>
 <script src="/js/gbvision.js"></script>
 <script src="/js/statistics/model/datetime.js"></script>
 <script src="/js/statistics/model/statistics.js"></script>
+<script src="/js/statistics/view/custom.js"></script>
+<script src="/js/statistics/view/user.js"></script>
+<script src="/js/statistics/view/product.js"></script>
 <script src="/js/statistics/view/statistics.js"></script>
 
 {% endblock lazyscript %}

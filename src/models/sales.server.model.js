@@ -12,7 +12,7 @@ var SalesSchema = new Schema({
         "default":''
     },
     date: {
-        type:String,
+        type:Date,
         "default":''
     },
     seller: {

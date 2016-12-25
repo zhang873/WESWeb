@@ -8,7 +8,7 @@ var Sales = mongoose.model('Sales')
 
 exports.index = function(req, res) {
     return res.render('login', {
-        title: 'µÇÂ¼'
+        title: 'ï¿½ï¿½Â¼'
     });
 };
 
@@ -47,13 +47,13 @@ exports.add = function(req, res) {
         if (sales) {
             return res.json({
                 rtn: -2,
-                message:'ÒÑ´æÔÚ'
+                message:'ï¿½Ñ´ï¿½ï¿½ï¿½'
             });
         }
 
         //var info = {};
         //info.contract_no = req.body.contract_no;
-        //info.date = req.body.date;
+        //info.date = new Date(req.body.date);
         //info.seller = req.body.seller;
         //info.custom = req.body.custom;
         //info.product = req.body.product;

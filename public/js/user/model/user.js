@@ -17,3 +17,4 @@ Users = Backbone.Collection.extend({
     url:'/wes/users',
     model: User
 });
+var users = new Users;

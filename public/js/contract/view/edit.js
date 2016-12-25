@@ -93,7 +93,10 @@ ContractView = Backbone.View.extend({
                         var data = model.toJSON();
 
                         that.$('#saleNoTxt').val(data.contract_no);
-                        that.$('#saleDate').val(data.date);
+
+                        var date = new Date(data.date);
+                        date = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+                        that.$('#saleDate').val(date);
                         that.$('#selectUser').val(data.seller);
                         that.$('#selectCustom').val(data.custom);
                         that.$('#selectCurrency').val(data.currency);
@@ -135,6 +138,8 @@ ContractView = Backbone.View.extend({
     },
 
     save:function(e,next) {
+        var checkData = true;
+
         var data = {};
         data.contract_no = $('#saleNoTxt').val();
         data.date = $('#saleDate').val();
@@ -153,6 +158,22 @@ ContractView = Backbone.View.extend({
         data.invoice = [];
         data.payment = [];
 
+        var inputs = [];
+        inputs.push($('#saleNoTxt'));
+        inputs.push($('#saleDate'));
+
+        if (checkInput(inputs) == false ){
+            checkData = false;
+        }
+
+        //console.log($('#saleNoTxt').val());
+        //if (!$('#saleNoTxt').val()) {
+        //    $('#saleNoTxt').attr('style', "border:2px solid red");
+        //    return;
+        //} else {
+        //    $('#saleNoTxt').attr('style', "");
+        //}
+
         var products =$("#productSetting").children('div');
         $.each(products,function(i,dom) {
             var product = {};
@@ -164,6 +185,15 @@ ContractView = Backbone.View.extend({
             product.price = $(dom).find("#priceTxt").val();
             product.sum = $(dom).find("#sumTxt").val();
             data.product.push(product);
+
+            var inputs = [];
+            inputs.push($(dom).find("#unitTxt"));
+            inputs.push($(dom).find('#numberTxt'));
+            inputs.push($(dom).find('#priceTxt'));
+            inputs.push($(dom).find('#sumTxt'));
+            if (checkInput(inputs) == false ){
+                checkData = false;
+            }
         });
 
         var logistics =$("#logisticsSetting").children('div');
@@ -187,6 +217,16 @@ ContractView = Backbone.View.extend({
             logis.total_cost = $(dom).find("#costTxt").val();
 
             data.logistics.push(logis);
+
+            var inputs = [];
+            inputs.push($(dom).find("#logisDate"));
+            inputs.push($(dom).find('#numberLogisTxt'));
+            inputs.push($(dom).find('#priceLogisTxt'));
+            inputs.push($(dom).find('#costTxt'));
+            inputs.push($(dom).find('#totalCostTxt'));
+            if (checkInput(inputs) == false ){
+                checkData = false;
+            }
         });
 
         var invoice =$("#invoiceSetting").children('div');
@@ -197,6 +237,13 @@ ContractView = Backbone.View.extend({
             inv.no_end = $(dom).find("#invoiceNoEndTxt").val();
 
             data.invoice.push(inv);
+
+            var inputs = [];
+            inputs.push($(dom).find("#invoiceDate"));
+            inputs.push($(dom).find('#invoiceNoStartTxt'));
+            if (checkInput(inputs) == false ){
+                checkData = false;
+            }
         });
 
         var payment =$("#paymentSetting").children('div');
@@ -208,7 +255,18 @@ ContractView = Backbone.View.extend({
             p.bank = $(dom).find("#bankTxt").val();
 
             data.payment.push(p);
+
+            var inputs = [];
+            inputs.push($(dom).find("#paymentDate"));
+            inputs.push($(dom).find('#receivedTxt'));
+            if (checkInput(inputs) == false ){
+                checkData = false;
+            }
         });
+
+        if (checkData == false) {
+            return popBy("#save", false, '下列红色标记处为必填项');
+        }
 
         if (!this.$el.attr('value')) {
             data.belong = $.cookie('token');
@@ -248,6 +306,19 @@ ContractView = Backbone.View.extend({
 
     },
 });
+
+function checkInput(inputs) {
+    var ret = true;
+    inputs.forEach(function(input){
+        if (!input.val()) {
+            input.attr('style', "border:2px solid red");
+            ret = false;
+        } else {
+            input.attr('style', "");
+        }
+    });
+    return ret;
+}
 
 var contractView = new ContractView();
 

@@ -52,10 +52,12 @@ var ContractItemView = Backbone.View.extend({
         var data = this.model.toJSON();
         console.log(this.model)
         data.id = data._id;
-        data.date = data.date;
+
+        var date = new Date(data.date);
+        data.date = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
         data.contract_no = data.contract_no;
         data.custom = getCustomName(data.custom);
-        //data.seller = getUserName(data.seller);
+        data.seller = getUserName(data.seller);
         data.belong = getUserName(data.belong);
 
         if (data.total == '') {
